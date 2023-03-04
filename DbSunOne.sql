@@ -212,3 +212,8 @@ add foreign key (AttributeID) references Attributes(AttributeID)
 alter table Accounts
 add foreign key (RoleID) references Roles(RoleID)
 go
+
+insert into Roles
+values (1, 'Admin', N'Quản lý'),
+	   (2, 'Staff', N'Nhân viên');
+go

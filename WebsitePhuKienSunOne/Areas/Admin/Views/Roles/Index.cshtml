@@ -1,0 +1,47 @@
+﻿@model IEnumerable<WebsitePhuKienSunOne.Models.Role>
+
+@{
+    ViewData["Title"] = "Quản lý quyền truy cập";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-title">
+    <div class="title_left">
+        <h3>Quản lý quyền truy cập</h3>
+        <h5>
+            <a asp-controller="Roles" asp-action="Create">Thêm quyền truy cập</a>
+        </h5>
+    </div>
+</div>
+<div class="x_panel">
+    <div class="x_content">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên vị trí</th>
+                    <th>Mô tả</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <th scope="row">@item.RoleId</th>
+                            <td>@item.RoleName</td>
+                            <td>@item.Description</td>
+                            <td>
+                                <a class="fa fa-pencil" asp-controller="Roles" asp-action="Edit" asp-route-id="@item.RoleId"> Sửa</a>
+                                &nbsp&nbsp&nbsp
+                                <a class="fa fa-remove" asp-controller="Roles" asp-action="Delete" asp-route-id="@item.RoleId"> Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

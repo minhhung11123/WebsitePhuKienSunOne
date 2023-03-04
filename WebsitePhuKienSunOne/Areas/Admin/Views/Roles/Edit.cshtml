@@ -1,0 +1,57 @@
+﻿@model WebsitePhuKienSunOne.Models.Role
+
+@{
+    ViewData["Title"] = "Chỉnh sửa quyền truy cập";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-title">
+    <div class="title_left">
+		<h3>Chỉnh sửa quyền truy cập</h3>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+	<div class="col-md-12 col-sm-12 ">
+		<div class="x_panel">
+			<div class="x_content">
+				<br>
+				<form asp-action="Edit" asp-route-id="@Model.RoleId" method="post" id="demo-form2" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="">
+
+					<div class="item form-group">
+						<label class="col-form-label col-md-3 col-sm-3 label-align">
+							ID <span class="required"></span>
+						</label>
+						<div class="col-md-6 col-sm-6 ">
+							<input type="text" class="form-control" readonly asp-for="RoleId">
+						</div>
+					</div>
+					<div class="item form-group">
+						<label class="col-form-label col-md-3 col-sm-3 label-align">
+							Tên vị trí <span class="required"></span>
+						</label>
+						<div class="col-md-6 col-sm-6 ">
+							<input type="text" class="form-control" asp-for="RoleName">
+						</div>
+					</div>
+					<div class="item form-group">
+						<label class="col-form-label col-md-3 col-sm-3 label-align">
+							Mô tả <span class="required"></span>
+						</label>
+						<div class="col-md-6 col-sm-6 ">
+							<input type="text" class="form-control" asp-for="Description">
+						</div>
+					</div>
+					<div class="ln_solid"></div>
+					<div class="item form-group">
+						<div class="col-md-6 col-sm-6 offset-md-3">
+							<a class="btn btn-primary" type="button" asp-action="Index">Hủy</a>
+							<button type="submit" class="btn btn-success">Lưu</button>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
