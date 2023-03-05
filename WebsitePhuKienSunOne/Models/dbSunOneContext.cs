@@ -37,7 +37,7 @@ namespace WebsitePhuKienSunOne.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=MinhHung\\MinhHung;Database=dbSunOne;Integrated Security=true");
+                optionsBuilder.UseSqlServer("Server=MINHHUNG\\MINHHUNG;Database=dbSunOne;Integrated Security=true");
             }
         }
 
@@ -49,9 +49,7 @@ namespace WebsitePhuKienSunOne.Models
             {
                 entity.Property(e => e.AccountId).HasColumnName("AccountID");
 
-                entity.Property(e => e.Active)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
@@ -108,7 +106,7 @@ namespace WebsitePhuKienSunOne.Models
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.HasKey(e => e.CatId)
-                    .HasName("PK__Categori__6A1C8ADA761AAECF");
+                    .HasName("PK__Categori__6A1C8ADA4A07731E");
 
                 entity.Property(e => e.CatId).HasColumnName("CatID");
 
@@ -135,9 +133,7 @@ namespace WebsitePhuKienSunOne.Models
             {
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
 
-                entity.Property(e => e.Active)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Address).HasMaxLength(255);
 
@@ -155,6 +151,8 @@ namespace WebsitePhuKienSunOne.Models
 
                 entity.Property(e => e.LastLogin).HasColumnType("datetime");
 
+                entity.Property(e => e.LocationId).HasColumnName("LocationID");
+
                 entity.Property(e => e.Password).HasMaxLength(50);
 
                 entity.Property(e => e.Phone)
@@ -164,6 +162,11 @@ namespace WebsitePhuKienSunOne.Models
                 entity.Property(e => e.Salt)
                     .HasMaxLength(6)
                     .IsFixedLength(true);
+
+                entity.HasOne(d => d.Location)
+                    .WithMany(p => p.Customers)
+                    .HasForeignKey(d => d.LocationId)
+                    .HasConstraintName("FK__Customers__Locat__4BAC3F29");
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -184,7 +187,7 @@ namespace WebsitePhuKienSunOne.Models
             modelBuilder.Entity<News>(entity =>
             {
                 entity.HasKey(e => e.PostId)
-                    .HasName("PK__News__AA126038FFA08C79");
+                    .HasName("PK__News__AA126038BC468452");
 
                 entity.Property(e => e.PostId).HasColumnName("PostID");
 

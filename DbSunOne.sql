@@ -10,7 +10,7 @@ create table Accounts (
 	Email nvarchar(50),
 	Password nvarchar(50),
 	Salt nchar(6),
-	Active bit not null default 1,
+	Active bit default 1,
 	FullName nvarchar(150),
 	RoleID int,
 	LastLogin datetime,
@@ -44,14 +44,14 @@ create table Customers (
 	Address nvarchar(255),
 	Email nchar(150),
 	Phone varchar(10),
-	Location int,
+	LocationID int,
 	District int,
 	Ward int,
 	CrateDate datetime,
 	Password nvarchar(50),
 	Salt nchar(6),
 	LastLogin datetime,
-	Active bit not null default 1
+	Active bit default 1
 );
 go
 
@@ -211,9 +211,17 @@ add foreign key (AttributeID) references Attributes(AttributeID)
 
 alter table Accounts
 add foreign key (RoleID) references Roles(RoleID)
+
+alter table Customers
+add foreign key (LocationID) references Locations(LocationID)
 go
 
 insert into Roles
 values (1, 'Admin', N'Quản lý'),
 	   (2, 'Staff', N'Nhân viên');
+go
+
+insert into Accounts
+values ('0123456789', 'abc@123', 'admin', '123456', 1, 'ADMIN', 1, '', ''),
+	   ('0123456789', 'abc@123', '123', '123456', 1, '123', 2, '', '');
 go

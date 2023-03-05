@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,11 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
     public class RolesController : Controller
     {
         private readonly dbSunOneContext _context;
-
-        public RolesController(dbSunOneContext context)
+		public INotyfService _notifyService { get; }
+		public RolesController(dbSunOneContext context, INotyfService notifyService)
         {
             _context = context;
+            _notifyService = notifyService;
         }
 
         // GET: Admin/Roles
@@ -99,11 +101,13 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
                 {
                     _context.Update(role);
                     await _context.SaveChangesAsync();
+                    _notifyService.Success("Cập nhật thành công");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!RoleExists(role.RoleId))
                     {
+                        _notifyService.Error("Có lỗi xảy ra");
                         return NotFound();
                     }
                     else
@@ -142,6 +146,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             var role = await _context.Roles.FindAsync(id);
             _context.Roles.Remove(role);
             await _context.SaveChangesAsync();
+            _notifyService.Success("Xóa quyền truy cập thành công");
             return RedirectToAction(nameof(Index));
         }
 

@@ -1,0 +1,66 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<section class="menu">
+    <nav class="navbar navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <h2 class="menu-title">Main Menu</h2>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+            </div><!-- / .navbar-header -->
+            <!-- Navbar Links -->
+            <div id="navbar" class="navbar-collapse collapse text-center">
+                <ul class="nav navbar-nav">
+
+                    <!-- Home -->
+                    <li class="dropdown ">
+                        <a asp-controller="Home" asp-action="Index">Trang chủ</a>
+                    </li><!-- / Home -->
+                    <li class="dropdown ">
+                        <a asp-controller="Home" asp-action="About">Về chúng tôi</a>
+                    </li>
+                    <li class="dropdown ">
+                        <a asp-controller="Home" asp-action="Contact">Liên hệ</a>
+                    </li>   
+                    <li class="dropdown ">
+                        <a asp-controller="Blog" asp-action="Index">Blog</a>
+                    </li>
+                    <!-- Product -->
+                    <li class="dropdown dropdown-slide">
+                        <a asp-controller="Product" asp-action="Index" class="dropdown-toggle" data-hover="dropdown" data-delay="350"
+                           role="button" aria-haspopup="true" aria-expanded="false">
+                            Sản phẩm <span class="tf-ion-ios-arrow-down"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="typography.html">Đăng nhập</a></li>
+                            <li><a href="buttons.html">Đăng ký</a></li>
+                            <li><a href="alerts.html">Quên mật khẩu</a></li>
+                        </ul>
+                    </li><!-- / Product -->
+                    <!-- Account -->
+                    <li class="dropdown dropdown-slide">
+                        <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="350"
+                           role="button" aria-haspopup="true" aria-expanded="false">
+                            Tài khoản <span class="tf-ion-ios-arrow-down"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="typography.html">Đăng nhập</a></li>
+                            <li><a href="buttons.html">Đăng ký</a></li>
+                            <li><a href="alerts.html">Quên mật khẩu</a></li>
+                        </ul>
+                    </li><!-- / Account -->
+                </ul><!-- / .nav .navbar-nav -->
+
+            </div>
+            <!--/.navbar-collapse -->
+        </div><!-- / .container -->
+    </nav>
+</section>
