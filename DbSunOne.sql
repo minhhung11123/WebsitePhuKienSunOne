@@ -120,15 +120,15 @@ create table Products (
 	Video nvarchar(255),
 	DateCreated datetime,
 	DateModified datetime,
-	BestSellers bit not null default 0,
-	HomeFlag bit not null default 0,
-	Active bit not null default 1,
+	BestSellers bit,
+	HomeFlag bit,
+	Active bit,
 	Tags nvarchar(MAX),
 	Title nvarchar(255),
 	Alias nvarchar(255),
 	MetaDesc nvarchar(255),
 	MetaKey nvarchar(255),
-	UnitslnStock int
+	UnitslnStock int default 0
 );
 go
 
@@ -224,4 +224,14 @@ go
 insert into Accounts
 values ('0123456789', 'abc@123', 'admin', '123456', 1, 'ADMIN', 1, '', ''),
 	   ('0123456789', 'abc@123', '123', '123456', 1, '123', 2, '', '');
+go
+
+insert into Categories(CatName)
+values  (N'Cà Vạt'),
+		(N'Dây Nịt'),
+		(N'Khăn'),
+		(N'Nón'),
+		(N'Thắt Lưng'),
+		(N'Vớ'),
+		(N'Khác');
 go

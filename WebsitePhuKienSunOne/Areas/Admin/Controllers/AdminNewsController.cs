@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,23 +10,22 @@ using WebsitePhuKienSunOne.Models;
 namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class RolesController : Controller
+    public class AdminNewsController : Controller
     {
         private readonly dbSunOneContext _context;
-		public INotyfService _notifyService { get; }
-		public RolesController(dbSunOneContext context, INotyfService notifyService)
+
+        public AdminNewsController(dbSunOneContext context)
         {
             _context = context;
-            _notifyService = notifyService;
         }
 
-        // GET: Admin/Roles
+        // GET: Admin/AdminNews
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Roles.ToListAsync());
+            return View(await _context.News.ToListAsync());
         }
 
-        // GET: Admin/Roles/Details/5
+        // GET: Admin/AdminNews/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,40 +33,39 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var role = await _context.Roles
-                .FirstOrDefaultAsync(m => m.RoleId == id);
-            if (role == null)
+            var news = await _context.News
+                .FirstOrDefaultAsync(m => m.PostId == id);
+            if (news == null)
             {
                 return NotFound();
             }
 
-            return View(role);
+            return View(news);
         }
 
-        // GET: Admin/Roles/Create
+        // GET: Admin/AdminNews/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/Roles/Create
+        // POST: Admin/AdminNews/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RoleId,RoleName,Description")] Role role)
+        public async Task<IActionResult> Create([Bind("PostId,Title,Scontents,Contents,Thumb,Published,Alias,CreateDate,Author,AccountId,Tags,CatId,IsHot,IsNewfeed,MetaKey,MetaDesc,Views")] News news)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(role);
+                _context.Add(news);
                 await _context.SaveChangesAsync();
-                _notifyService.Success("Thêm thành công");
                 return RedirectToAction(nameof(Index));
             }
-            return View(role);
+            return View(news);
         }
 
-        // GET: Admin/Roles/Edit/5
+        // GET: Admin/AdminNews/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,22 +73,22 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var role = await _context.Roles.FindAsync(id);
-            if (role == null)
+            var news = await _context.News.FindAsync(id);
+            if (news == null)
             {
                 return NotFound();
             }
-            return View(role);
+            return View(news);
         }
 
-        // POST: Admin/Roles/Edit/5
+        // POST: Admin/AdminNews/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RoleId,RoleName,Description")] Role role)
+        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,Scontents,Contents,Thumb,Published,Alias,CreateDate,Author,AccountId,Tags,CatId,IsHot,IsNewfeed,MetaKey,MetaDesc,Views")] News news)
         {
-            if (id != role.RoleId)
+            if (id != news.PostId)
             {
                 return NotFound();
             }
@@ -100,13 +97,12 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(role);
+                    _context.Update(news);
                     await _context.SaveChangesAsync();
-                    _notifyService.Success("Cập nhật thành công");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RoleExists(role.RoleId))
+                    if (!NewsExists(news.PostId))
                     {
                         return NotFound();
                     }
@@ -117,10 +113,10 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(role);
+            return View(news);
         }
 
-        // GET: Admin/Roles/Delete/5
+        // GET: Admin/AdminNews/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -128,31 +124,30 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var role = await _context.Roles
-                .FirstOrDefaultAsync(m => m.RoleId == id);
-            if (role == null)
+            var news = await _context.News
+                .FirstOrDefaultAsync(m => m.PostId == id);
+            if (news == null)
             {
                 return NotFound();
             }
 
-            return View(role);
+            return View(news);
         }
 
-        // POST: Admin/Roles/Delete/5
+        // POST: Admin/AdminNews/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var role = await _context.Roles.FindAsync(id);
-            _context.Roles.Remove(role);
+            var news = await _context.News.FindAsync(id);
+            _context.News.Remove(news);
             await _context.SaveChangesAsync();
-            _notifyService.Success("Xóa quyền truy cập thành công");
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RoleExists(int id)
+        private bool NewsExists(int id)
         {
-            return _context.Roles.Any(e => e.RoleId == id);
+            return _context.News.Any(e => e.PostId == id);
         }
     }
 }

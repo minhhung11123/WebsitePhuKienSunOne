@@ -1,133 +1,158 @@
 ﻿@model WebsitePhuKienSunOne.Models.Product
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.ShortDesc;
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Details</h1>
+<div class="page-title">
+    <div class="title_left">
+        <h3>Thông tin sản phẩm</h3>
+    </div>
+</div>
 
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ShortDesc)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ShortDesc)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Discount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Discount)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Thumb)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Thumb)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Video)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Video)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateCreated)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateCreated)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateModified)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateModified)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BestSellers)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BestSellers)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HomeFlag)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HomeFlag)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Active)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Active)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tags)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tags)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Alias)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Alias)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MetaDesc)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MetaDesc)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MetaKey)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MetaKey)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UnitslnStock)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UnitslnStock)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cat)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Cat.CatId)
-        </dd>
-    </dl>
+<div class="clearfix"></div>
+
+<div class="x_panel">
+    <form enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="x_content">
+
+            <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="ProductName">
+                    Tên sản phẩm
+                </label>
+                <div class="col-md-6 ">
+                    <input readonly="" type="text" class="form-control" value="@Model.ProductName">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="ShortDesc">
+                    Mô tả ngắn
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                    <input readonly="" type="text" class="form-control" value="@Model.ShortDesc">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="Description">
+                    Mô tả
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                    <input readonly="" type="text" class="form-control" value="@Model.Description">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="CatId">
+                    Danh mục sản phẩm
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                    <input readonly="" type="text" class="form-control" value="@Model.Cat.CatName">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="Price">
+                    Giá bán
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                    <input readonly="" type="text" class="form-control" value="@Model.Price.Value.ToString("#,##0")đ">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="Discount">
+                    Giảm giá (%)
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                    <input readonly="" type="text" class="form-control" value="@Model.Discount">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="Thumb">
+                    Ảnh đại diện
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                    <img width="200" height="200" src="~/images/products/@Model.Thumb" alt="@Model.Title" />
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="UnitslnStock">
+                    Tồn kho
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                    <input readonly="" type="text" class="form-control" value="@Model.UnitslnStock">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="DateCreated">
+                    Ngày tạo
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                    <input readonly="" type="text" class="form-control" value="@Model.DateCreated.Value.ToString("HH:mm dd/MM/yyyy")">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="DateModified">
+                    Ngày chỉnh sửa
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                    <input readonly="" type="text" class="form-control" value="@Model.DateModified.Value.ToString("HH:mm dd/MM/yyyy")">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align"></label>
+                <div class="col-md-6 col-sm-6 ">
+                    <input type="checkbox" asp-for="Active" class="js-switch" disabled=""> Public
+                    <br /><br />
+                    <input type="checkbox" asp-for="HomeFlag" class="js-switch" disabled=""> HomeFlag
+                    <br /><br />
+                    <input type="checkbox" asp-for="BestSellers" class="js-switch" disabled=""> BestSellers
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="Title">
+                    Title
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                    <input readonly="" type="text" class="form-control" value="@Model.Title">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="MetaDesc">
+                    MetaDesc
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                    <input readonly="" type="text" class="form-control" value="@Model.MetaDesc">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="col-form-label col-md-3 col-sm-3 label-align" asp-for="MetaKey">
+                    MetaKey
+                </label>
+                <div class="col-md-6 col-sm-6 ">
+                    <input readonly="" type="text" class="form-control" value="@Model.MetaKey">
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@section Scripts{
+    <!-- bootstrap-wysiwyg -->
+    <script src="~/Admin/vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
+    <script src="~/Admin/vendors/jquery.hotkeys/jquery.hotkeys.js"></script>
+    <script src="~/Admin/vendors/google-code-prettify/src/prettify.js"></script>
+    <!-- jQuery Tags Input -->
+    <script src="~/Admin/vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
+    <!-- Switchery -->
+    <script src="~/Admin/vendors/switchery/dist/switchery.min.js"></script>
+    <!-- Select2 -->
+    <script src="~/Admin/vendors/select2/dist/js/select2.full.min.js"></script>
+    <!-- Parsley -->
+    <script src="~/Admin/vendors/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Autosize -->
+    <script src="~/Admin/vendors/autosize/dist/autosize.min.js"></script>
+    <!-- jQuery autocomplete -->
+    <script src="~/Admin/vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js"></script>
+    <!-- starrr -->
+    <script src="~/Admin/vendors/starrr/dist/starrr.js"></script>
+}

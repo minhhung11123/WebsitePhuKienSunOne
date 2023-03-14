@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<WebsitePhuKienSunOne.Models.Product>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Danh sách sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -12,6 +12,7 @@
 </div>
 
 <div class="clearfix"></div>
+<a asp-controller="AdminProducts" asp-action="Create" class="btn btn-round btn-primary">Thêm mới sản phẩm</a>
 
 <div class="row">
     <div class="col-md-12 col-sm-12 ">
@@ -25,6 +26,7 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Tên sản phẩm</th>
+                                        <th>Mô tả ngắn</th>
                                         <th>Danh mục</th>
                                         <th>Giá</th>
                                         <th>Tồn kho</th>
@@ -33,7 +35,7 @@
                                     </tr>
                                 </thead>
 
-                                <tbody>
+                                <tbody id="records_table">
                                     @if (Model != null)
                                     {
                                         foreach (var item in Model)
@@ -41,6 +43,7 @@
                                             <tr>
                                                 <td>@item.ProductId</td>
                                                 <td>@item.ProductName</td>
+                                                <td>@item.ShortDesc</td>
                                                 <td>@item.Cat.CatName</td>
                                                 <td>@item.Price.Value.ToString("#,##0") VND</td>
                                                 <td>@item.UnitslnStock</td>

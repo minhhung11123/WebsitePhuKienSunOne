@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebsitePhuKienSunOne.Helpper;
 using WebsitePhuKienSunOne.Models;
 
 namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
@@ -13,10 +16,13 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
     public class AdminProductsController : Controller
     {
         private readonly dbSunOneContext _context;
+        public INotyfService _notifyService { get; }
 
-        public AdminProductsController(dbSunOneContext context)
+
+        public AdminProductsController(dbSunOneContext context, INotyfService notifyService)
         {
             _context = context;
+            _notifyService = notifyService;
         }
 
         // GET: Admin/AdminProducts
@@ -41,14 +47,13 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
             return View(product);
         }
 
         // GET: Admin/AdminProducts/Create
         public IActionResult Create()
         {
-            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId");
+            ViewData["CatName"] = new SelectList(_context.Categories, "CatId", "CatName");
             return View();
         }
 
@@ -57,12 +62,24 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,Alias,MetaDesc,MetaKey,UnitslnStock")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,Alias,MetaDesc,MetaKey,UnitslnStock")] Product product, Microsoft.AspNetCore.Http.IFormFile fThumb)
         {
             if (ModelState.IsValid)
             {
+                product.ProductName = Utilities.ToTitleCase(product.ProductName);
+                if(fThumb != null)
+                {
+                    string extension = Path.GetExtension(fThumb.FileName);
+                    string image = Utilities.SEOUrl(product.ShortDesc) + extension;
+                    product.Thumb = await Utilities.UploadFile(fThumb, @"products", image.ToLower());
+                }
+                if (string.IsNullOrEmpty(product.Thumb)) product.Thumb = "default.jpg";
+                product.Alias = Utilities.SEOUrl(product.ShortDesc);
+                product.DateCreated = DateTime.Now;
+                product.DateModified = DateTime.Now;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
+                _notifyService.Success("Thêm sản phẩm thành công");
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId", product.CatId);
@@ -82,7 +99,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId", product.CatId);
+            ViewData["CatName"] = new SelectList(_context.Categories, "CatId", "CatName", product.CatId);
             return View(product);
         }
 
@@ -91,7 +108,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,Alias,MetaDesc,MetaKey,UnitslnStock")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,Alias,MetaDesc,MetaKey,UnitslnStock")] Product product, Microsoft.AspNetCore.Http.IFormFile fThumb)
         {
             if (id != product.ProductId)
             {
@@ -102,8 +119,19 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             {
                 try
                 {
+                    product.ProductName = Utilities.ToTitleCase(product.ProductName);
+                    if (fThumb != null)
+                    {
+                        string extension = Path.GetExtension(fThumb.FileName);
+                        string image = Utilities.SEOUrl(product.ShortDesc) + extension;
+                        product.Thumb = await Utilities.UploadFile(fThumb, @"products", image.ToLower());
+                    }
+                    if (string.IsNullOrEmpty(product.Thumb)) product.Thumb = "default.jpg";
+                    product.Alias = Utilities.SEOUrl(product.ShortDesc);
+                    product.DateModified = DateTime.Now;
                     _context.Update(product);
                     await _context.SaveChangesAsync();
+                    _notifyService.Success("Cập nhật sản phẩm thành công");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -149,6 +177,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             var product = await _context.Products.FindAsync(id);
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
+            _notifyService.Success("Xóa sản phẩm thành công");
             return RedirectToAction(nameof(Index));
         }
 

@@ -1,18 +1,19 @@
-﻿@model IEnumerable<WebsitePhuKienSunOne.Models.Account>
+﻿@model IEnumerable<WebsitePhuKienSunOne.Models.News>
 
 @{
-    ViewData["Title"] = "Danh sách tài khoản quản trị";
+    ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="page-title">
     <div class="title_left">
-        <h3>Danh sách tài khoản quản trị</h3>
+        <h3>Danh sách tin tức</h3>
     </div>
 </div>
 
+
 <div class="clearfix"></div>
-<a asp-controller="AdminAccounts" asp-action="Create" class="btn btn-round btn-primary">Tạo tài khoản</a>
+<a asp-controller="AdminNews" asp-action="Create" class="btn btn-round btn-primary">Tạo tin tức mới</a>
 
 <div class="row">
     <div class="col-md-12 col-sm-12 ">
@@ -25,12 +26,11 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Họ tên</th>
-                                        <th>Email</th>
-                                        <th>Số điện thoại</th>
-                                        <th>Quyền truy cập</th>
-                                        <th>Lần đăng nhập cuối</th>
-                                        <th>Trạng thái</th>
+                                        <th>Tiêu Đề</th>
+                                        <th>Ngày Tạo</th>
+                                        <th>Tác G   iả</th>
+                                        <th>Lượt Xem</th>
+                                        <th>Trạng Thái</th>
                                         <th>#</th>
                                     </tr>
                                 </thead>
@@ -42,27 +42,27 @@
                                         foreach (var item in Model)
                                         {
                                             <tr>
-                                                <td>@item.AccountId</td>
-                                                <td>@item.FullName</td>
-                                                <td>@item.Email</td>
-                                                <td>@item.Phone</td>
-                                                <td>@item.Role.Description</td>
-                                                <td>@item.LastLogin.Value.ToString("HH:mm dd/MM/yyyy")</td>
-                                                <td>@if(item.Active)
+                                                <td>@item.PostId</td>
+                                                <td>@item.Title</td>
+                                                <td>@item.CreateDate.Value.ToString("HH:mm dd/MM/yyyy")</td>
+                                                <td>@item.Author</td>
+                                                <td>@item.Views</td>
+                                                <td>
+                                                    @if (item.Published == true)
                                                     {
-                                                        <span class="badge badge-primary">Kích hoạt</span>
+                                                        <span class="badge badge-primary">Hiển Thị</span>
                                                     }
                                                     else
                                                     {
-                                                        <span class="badge badge-secondary">Khóa</span>
+                                                        <span class="badge badge-secondary">Không Hiển Thị</span>
                                                     }
                                                 </td>
                                                 <td>
-                                                    <a class="fa fa-search" asp-controller="AdminAccounts" asp-action="Details" asp-route-id="@item.AccountId"> Xem</a>
+                                                    <a class="fa fa-search" asp-controller="AdminNews" asp-action="Details" asp-route-id="@item.PostId"> Xem</a>
                                                     &nbsp&nbsp&nbsp
-                                                    <a class="fa fa-pencil" asp-controller="AdminAccounts" asp-action="Edit" asp-route-id="@item.AccountId"> Sửa</a>
+                                                    <a class="fa fa-pencil" asp-controller="AdminNews" asp-action="Edit" asp-route-id="@item.PostId"> Sửa</a>
                                                     &nbsp&nbsp&nbsp
-                                                    <a class="fa fa-remove" asp-controller="AdminAccounts" asp-action="Delete" asp-route-id="@item.AccountId"> Xóa</a>
+                                                    <a class="fa fa-remove" asp-controller="AdminNews" asp-action="Delete" asp-route-id="@item.PostId"> Xóa</a>
                                                 </td>
                                             </tr>
                                         }
