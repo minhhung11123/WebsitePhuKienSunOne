@@ -1,6 +1,8 @@
 using AspNetCoreHero.ToastNotification;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,7 +31,14 @@ namespace WebsitePhuKienSunOne
         public void ConfigureServices(IServiceCollection services)
         {
             var stringConnectdb = Configuration.GetConnectionString("dbSunOne");
-            services.AddDbContext<dbSunOneContext>(options =>options.UseSqlServer(stringConnectdb));
+            services.AddDbContext<dbSunOneContext>(options => options.UseSqlServer(stringConnectdb));
+            services.AddSession();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie(options =>
+                        {
+                            options.LoginPath = new PathString("/login.html");
+                            options.AccessDeniedPath = new PathString("/");
+                        });
             services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.All }));
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddNotyf(config => { config.DurationInSeconds = 3; config.IsDismissable = true; config.Position = NotyfPosition.BottomRight; });
@@ -51,9 +60,12 @@ namespace WebsitePhuKienSunOne
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting();
+            app.UseSession();
 
+            app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
+            
 
             app.UseEndpoints(endpoints =>
             {

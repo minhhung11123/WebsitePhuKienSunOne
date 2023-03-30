@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebsitePhuKienSunOne.Helpper;
 using WebsitePhuKienSunOne.Models;
 
 namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
@@ -13,10 +16,13 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
     public class AdminPagesController : Controller
     {
         private readonly dbSunOneContext _context;
+        public INotyfService _notifyService { get; }
 
-        public AdminPagesController(dbSunOneContext context)
+
+        public AdminPagesController(dbSunOneContext context, INotyfService notyfService)
         {
             _context = context;
+            _notifyService = notyfService;
         }
 
         // GET: Admin/AdminPages
@@ -54,12 +60,23 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PageId,PageName,Contents,Thumb,Published,Title,MetaDesc,MetaKey,Alias,CreateDate,Ordering")] Page page)
+        public async Task<IActionResult> Create([Bind("PageId,PageName,Contents,Thumb,Published,Title,MetaDesc,MetaKey,Alias,CreateDate,Ordering")] Page page, Microsoft.AspNetCore.Http.IFormFile fThumb)
         {
             if (ModelState.IsValid)
             {
+                page.PageName = Utilities.ToTitleCase(page.PageName);
+                if (fThumb != null)
+                {
+                    string extension = Path.GetExtension(fThumb.FileName);
+                    string image = Utilities.SEOUrl(page.PageName) + extension;
+                    page.Thumb = await Utilities.UploadFile(fThumb, @"pages", image.ToLower());
+                }
+                if (string.IsNullOrEmpty(page.Thumb)) page.Thumb = "default.jpg";
+                page.Alias = Utilities.SEOUrl(page.PageName);
+                page.CreateDate = DateTime.Now;
                 _context.Add(page);
                 await _context.SaveChangesAsync();
+                _notifyService.Success("Tạo trang thành công");
                 return RedirectToAction(nameof(Index));
             }
             return View(page);
@@ -86,7 +103,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PageId,PageName,Contents,Thumb,Published,Title,MetaDesc,MetaKey,Alias,CreateDate,Ordering")] Page page)
+        public async Task<IActionResult> Edit(int id, [Bind("PageId,PageName,Contents,Thumb,Published,Title,MetaDesc,MetaKey,Alias,CreateDate,Ordering")] Page page, Microsoft.AspNetCore.Http.IFormFile fThumb)
         {
             if (id != page.PageId)
             {
@@ -97,7 +114,17 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             {
                 try
                 {
+                    page.PageName = Utilities.ToTitleCase(page.PageName);
+                    if (fThumb != null)
+                    {
+                        string extension = Path.GetExtension(fThumb.FileName);
+                        string image = Utilities.SEOUrl(page.PageName) + extension;
+                        page.Thumb = await Utilities.UploadFile(fThumb, @"pages", image.ToLower());
+                    }
+                    if (string.IsNullOrEmpty(page.Thumb)) page.Thumb = "default.jpg";
+                    page.Alias = Utilities.SEOUrl(page.PageName);
                     _context.Update(page);
+                    _notifyService.Success("Cập nhật thành công");
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -142,6 +169,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             var page = await _context.Pages.FindAsync(id);
             _context.Pages.Remove(page);
             await _context.SaveChangesAsync();
+            _notifyService.Success("Xóa thành công");
             return RedirectToAction(nameof(Index));
         }
 

@@ -1,0 +1,74 @@
+﻿@model WebsitePhuKienSunOne.Models.News
+
+@{
+	ViewData["Title"] = Model.Title;
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	List<News> BaiVietLienQuan = ViewBag.BaiVietLienQuan;
+}
+
+<section class="page-header">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="content">
+					<h1 class="page-name">Blog</h1>
+					<ol class="breadcrumb">
+						<li><a href="/">Home</a></li>
+						<li class="active">Blog</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="post post-single">
+				<h2 class="post-title">@Model.Title</h2>
+				<div class="post-meta">
+					<ul>
+						<li>
+							<i class="tf-ion-ios-calendar"></i> @Model.CreateDate.Value.ToShortDateString()
+						</li>
+						<li>
+							<i class="tf-ion-android-person"></i> POSTED BY ADMIN
+						</li>
+						<li>
+							<a href="#!"><i class="tf-ion-ios-pricetags"></i> LIFESTYLE</a>,<a href="#!"> TRAVEL</a>, <a href="#!">FASHION</a>
+						</li>
+						<li>
+							<i class="tf-ion-chatbubbles"></i> @Model.Views lượt xem
+						</li>
+					</ul>
+				</div>
+				<div class="post-content post-excerpt">
+					@Html.Raw(Model.Contents)
+				</div>
+				<div class="post-social-share">
+					<h3 class="post-sub-heading">Bài viết liên quan</h3>
+					<div class="widget widget-latest-post">
+						@if(BaiVietLienQuan!=null&& BaiVietLienQuan.Count() > 0)
+						{
+							foreach (var item in BaiVietLienQuan)
+							{
+								string url = $"/news/{item.Alias}-{item.PostId}.html";
+								<div class="media">
+									<a class="pull-left" href="@url">
+										<img class="media-object" src="~/images/news/@item.Thumb" alt="@item.Title">
+									</a>
+									<div class="media-body">
+										<h4 class="media-heading"><a href="@url">@item.Title</a></h4>
+										<p>@item.CreateDate.Value.ToShortDateString()</p>
+									</div>
+								</div>
+							}
+						}
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

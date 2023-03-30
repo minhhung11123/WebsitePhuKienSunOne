@@ -20,7 +20,6 @@ namespace WebsitePhuKienSunOne.Models
         public int? Price { get; set; }
         public int? Discount { get; set; }
         public string Thumb { get; set; }
-        public string Video { get; set; }
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public bool BestSellers { get; set; }

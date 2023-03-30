@@ -49,8 +49,6 @@ namespace WebsitePhuKienSunOne.Models
             {
                 entity.Property(e => e.AccountId).HasColumnName("AccountID");
 
-                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
-
                 entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Email).HasMaxLength(50);
@@ -74,7 +72,7 @@ namespace WebsitePhuKienSunOne.Models
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.RoleId)
-                    .HasConstraintName("FK__Accounts__RoleID__4AB81AF0");
+                    .HasConstraintName("FK__Accounts__RoleID__440B1D61");
             });
 
             modelBuilder.Entity<Attribute>(entity =>
@@ -95,18 +93,18 @@ namespace WebsitePhuKienSunOne.Models
                 entity.HasOne(d => d.Attribute)
                     .WithMany(p => p.AttributesPrices)
                     .HasForeignKey(d => d.AttributeId)
-                    .HasConstraintName("FK__Attribute__Attri__49C3F6B7");
+                    .HasConstraintName("FK__Attribute__Attri__4316F928");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.AttributesPrices)
                     .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK__Attribute__Produ__48CFD27E");
+                    .HasConstraintName("FK__Attribute__Produ__4222D4EF");
             });
 
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.HasKey(e => e.CatId)
-                    .HasName("PK__Categori__6A1C8ADA4A07731E");
+                    .HasName("PK__Categori__6A1C8ADABA52F3A5");
 
                 entity.Property(e => e.CatId).HasColumnName("CatID");
 
@@ -122,8 +120,6 @@ namespace WebsitePhuKienSunOne.Models
 
                 entity.Property(e => e.ParentId).HasColumnName("ParentID");
 
-                entity.Property(e => e.Published).HasDefaultValueSql("((1))");
-
                 entity.Property(e => e.Thumb).HasMaxLength(250);
 
                 entity.Property(e => e.Title).HasMaxLength(250);
@@ -132,8 +128,6 @@ namespace WebsitePhuKienSunOne.Models
             modelBuilder.Entity<Customer>(entity =>
             {
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
-
-                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Address).HasMaxLength(255);
 
@@ -166,7 +160,7 @@ namespace WebsitePhuKienSunOne.Models
                 entity.HasOne(d => d.Location)
                     .WithMany(p => p.Customers)
                     .HasForeignKey(d => d.LocationId)
-                    .HasConstraintName("FK__Customers__Locat__4BAC3F29");
+                    .HasConstraintName("FK__Customers__Locat__44FF419A");
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -187,7 +181,7 @@ namespace WebsitePhuKienSunOne.Models
             modelBuilder.Entity<News>(entity =>
             {
                 entity.HasKey(e => e.PostId)
-                    .HasName("PK__News__AA126038BC468452");
+                    .HasName("PK__News__AA126038C383EF6C");
 
                 entity.Property(e => e.PostId).HasColumnName("PostID");
 
@@ -208,10 +202,6 @@ namespace WebsitePhuKienSunOne.Models
                 entity.Property(e => e.MetaDesc).HasMaxLength(255);
 
                 entity.Property(e => e.MetaKey).HasMaxLength(255);
-
-                entity.Property(e => e.Published)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Scontents)
                     .HasMaxLength(255)
@@ -241,12 +231,12 @@ namespace WebsitePhuKienSunOne.Models
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK__Orders__Customer__46E78A0C");
+                    .HasConstraintName("FK__Orders__Customer__403A8C7D");
 
                 entity.HasOne(d => d.TransactStatus)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.TransactStatusId)
-                    .HasConstraintName("FK__Orders__Transact__45F365D3");
+                    .HasConstraintName("FK__Orders__Transact__3F466844");
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
@@ -262,7 +252,7 @@ namespace WebsitePhuKienSunOne.Models
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK__OrderDeta__Order__44FF419A");
+                    .HasConstraintName("FK__OrderDeta__Order__3E52440B");
             });
 
             modelBuilder.Entity<Page>(entity =>
@@ -279,10 +269,6 @@ namespace WebsitePhuKienSunOne.Models
 
                 entity.Property(e => e.PageName).HasMaxLength(250);
 
-                entity.Property(e => e.Published)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
                 entity.Property(e => e.Thumb).HasMaxLength(250);
 
                 entity.Property(e => e.Title).HasMaxLength(250);
@@ -291,10 +277,6 @@ namespace WebsitePhuKienSunOne.Models
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
-
-                entity.Property(e => e.Active)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Alias).HasMaxLength(255);
 
@@ -318,12 +300,12 @@ namespace WebsitePhuKienSunOne.Models
 
                 entity.Property(e => e.Title).HasMaxLength(255);
 
-                entity.Property(e => e.Video).HasMaxLength(255);
+                entity.Property(e => e.UnitslnStock).HasDefaultValueSql("((0))");
 
                 entity.HasOne(d => d.Cat)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.CatId)
-                    .HasConstraintName("FK__Products__CatID__47DBAE45");
+                    .HasConstraintName("FK__Products__CatID__412EB0B6");
             });
 
             modelBuilder.Entity<Role>(entity =>

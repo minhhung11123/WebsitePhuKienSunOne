@@ -1,6 +1,6 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor
+
 
 <section class="menu">
     <nav class="navbar navigation">
@@ -29,7 +29,7 @@
                     </li>
                     <li class="dropdown ">
                         <a asp-controller="Home" asp-action="Contact">Liên hệ</a>
-                    </li>   
+                    </li>
                     <li class="dropdown ">
                         <a asp-controller="Blog" asp-action="Index">Blog</a>
                     </li>
@@ -47,15 +47,29 @@
                     </li><!-- / Product -->
                     <!-- Account -->
                     <li class="dropdown dropdown-slide">
-                        <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="350"
-                           role="button" aria-haspopup="true" aria-expanded="false">
-                            Tài khoản <span class="tf-ion-ios-arrow-down"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="typography.html">Đăng nhập</a></li>
-                            <li><a href="buttons.html">Đăng ký</a></li>
-                            <li><a href="alerts.html">Quên mật khẩu</a></li>
-                        </ul>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="350"
+                               role="button" aria-haspopup="true" aria-expanded="false">
+                                Chào @Accessor.HttpContext.Session.GetString("CustomerName") <span class="tf-ion-ios-arrow-down"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Dashboard.html">Tài khoản của tôi</a></li>
+                                <li><a href="/Logout.html">Đăng xuất</a></li>
+                            </ul>
+                        }
+                        else
+                        {
+                            <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="350"
+                               role="button" aria-haspopup="true" aria-expanded="false">
+                                Tài khoản <span class="tf-ion-ios-arrow-down"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Login.html">Đăng nhập</a></li>
+                                <li><a href="/Register.html">Đăng ký</a></li>
+                                <li><a href="/Dashboard.html">Quên mật khẩu</a></li>
+                            </ul>
+                        }
                     </li><!-- / Account -->
                 </ul><!-- / .nav .navbar-nav -->
 

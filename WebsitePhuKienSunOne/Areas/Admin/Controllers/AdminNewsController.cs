@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebsitePhuKienSunOne.Helpper;
 using WebsitePhuKienSunOne.Models;
 
 namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
@@ -13,10 +16,13 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
     public class AdminNewsController : Controller
     {
         private readonly dbSunOneContext _context;
+        public INotyfService _notifyService { get; }
 
-        public AdminNewsController(dbSunOneContext context)
+
+        public AdminNewsController(dbSunOneContext context, INotyfService notifyService)
         {
             _context = context;
+            _notifyService = notifyService;
         }
 
         // GET: Admin/AdminNews
@@ -54,12 +60,25 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PostId,Title,Scontents,Contents,Thumb,Published,Alias,CreateDate,Author,AccountId,Tags,CatId,IsHot,IsNewfeed,MetaKey,MetaDesc,Views")] News news)
+        public async Task<IActionResult> Create([Bind("PostId,Title,Scontents,Contents,Thumb,Published,Alias,CreateDate,Author,AccountId,Tags,CatId,IsHot,IsNewfeed,MetaKey,MetaDesc,Views")] News news, Microsoft.AspNetCore.Http.IFormFile fThumb)
         {
             if (ModelState.IsValid)
             {
+                news.Title = Utilities.ToTitleCase(news.Title);
+                if (fThumb != null)
+                {
+                    string extension = Path.GetExtension(fThumb.FileName);
+                    string image = Utilities.SEOUrl(news.Title) + extension;
+                    news.Thumb = await Utilities.UploadFile(fThumb, @"news", image.ToLower());
+                }
+                if (string.IsNullOrEmpty(news.Thumb)) news.Thumb = "default.jpg";
+                news.Alias = Utilities.SEOUrl(news.Title);
+                news.Author = "Admin";
+                news.Views = 0;
+                news.CreateDate = DateTime.Now;
                 _context.Add(news);
                 await _context.SaveChangesAsync();
+                _notifyService.Success("Tạo tin tức mới thành công");
                 return RedirectToAction(nameof(Index));
             }
             return View(news);
@@ -86,7 +105,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,Scontents,Contents,Thumb,Published,Alias,CreateDate,Author,AccountId,Tags,CatId,IsHot,IsNewfeed,MetaKey,MetaDesc,Views")] News news)
+        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,Scontents,Contents,Thumb,Published,Alias,CreateDate,Author,AccountId,Tags,CatId,IsHot,IsNewfeed,MetaKey,MetaDesc,Views")] News news, Microsoft.AspNetCore.Http.IFormFile fThumb)
         {
             if (id != news.PostId)
             {
@@ -97,8 +116,18 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             {
                 try
                 {
+                    news.Title = Utilities.ToTitleCase(news.Title);
+                    if (fThumb != null)
+                    {
+                        string extension = Path.GetExtension(fThumb.FileName);
+                        string image = Utilities.SEOUrl(news.Title) + extension;
+                        news.Thumb = await Utilities.UploadFile(fThumb, @"news", image.ToLower());
+                    }
+                    if (string.IsNullOrEmpty(news.Thumb)) news.Thumb = "default.jpg";
+                    news.Alias = Utilities.SEOUrl(news.Title);
                     _context.Update(news);
                     await _context.SaveChangesAsync();
+                    _notifyService.Success("Cập nhật tin tức thành công");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -142,6 +171,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             var news = await _context.News.FindAsync(id);
             _context.News.Remove(news);
             await _context.SaveChangesAsync();
+            _notifyService.Success("Xóa tin tức thành công");
             return RedirectToAction(nameof(Index));
         }
 

@@ -66,7 +66,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                product.ProductName = Utilities.ToTitleCase(product.ProductName);
+                product.ShortDesc = Utilities.ToTitleCase(product.ShortDesc);
                 if(fThumb != null)
                 {
                     string extension = Path.GetExtension(fThumb.FileName);
@@ -119,7 +119,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             {
                 try
                 {
-                    product.ProductName = Utilities.ToTitleCase(product.ProductName);
+                    product.ShortDesc = Utilities.ToTitleCase(product.ShortDesc);
                     if (fThumb != null)
                     {
                         string extension = Path.GetExtension(fThumb.FileName);

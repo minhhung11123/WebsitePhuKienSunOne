@@ -19,14 +19,6 @@
     <link href="~/Admin/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
     <!-- bootstrap-daterangepicker -->
     <link href="~/Admin/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-    <!-- bootstrap-wysiwyg -->
-    <link href="~/Admin/vendors/google-code-prettify/bin/prettify.min.css" rel="stylesheet">
-    <!-- Select2 -->
-    <link href="~/Admin/vendors/select2/dist/css/select2.min.css" rel="stylesheet">
-    <!-- Switchery -->
-    <link href="~/Admin/vendors/switchery/dist/switchery.min.css" rel="stylesheet">
-    <!-- starrr -->
-    <link href="~/Admin/vendors/starrr/dist/starrr.css" rel="stylesheet">
     <!-- iCheck -->
     <link href="~/Admin/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
     <!-- Datatables -->
@@ -36,6 +28,8 @@
     <link href="~/Admin/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
     <link href="~/Admin/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
     <link href="~/Admin/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+
+    @await RenderSectionAsync("Styles", required: false)
 
 
     <!-- Custom Theme Style -->
@@ -57,7 +51,7 @@
                         <ul class=" navbar-right">
                             <li class="nav-item dropdown open" style="padding-left: 15px;">
                                 <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
-                                    <img src="images/img.jpg" alt="">Minh Hùng
+                                    <img src="~/Admin/assets/images/img.jpg" alt="">Minh Hùng
                                 </a>
                                 <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="javascript:;"> Profile</a>
@@ -78,7 +72,7 @@
                                 <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
                                     <li class="nav-item">
                                         <a class="dropdown-item">
-                                            <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                            <span class="image"><img src="~/Admin/assets/images/img.jpg" alt="Profile Image" /></span>
                                             <span>
                                                 <span>Minh Hùng</span>
                                                 <span class="time">3 mins ago</span>
@@ -90,7 +84,7 @@
                                     </li>
                                     <li class="nav-item">
                                         <a class="dropdown-item">
-                                            <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                            <span class="image"><img src="~/Admin/assets/images/img.jpg" alt="Profile Image" /></span>
                                             <span>
                                                 <span>Minh Hùng</span>
                                                 <span class="time">3 mins ago</span>
@@ -102,7 +96,7 @@
                                     </li>
                                     <li class="nav-item">
                                         <a class="dropdown-item">
-                                            <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                            <span class="image"><img src="~/Admin/assets/images/img.jpg" alt="Profile Image" /></span>
                                             <span>
                                                 <span>Minh Hùng</span>
                                                 <span class="time">3 mins ago</span>
@@ -114,7 +108,7 @@
                                     </li>
                                     <li class="nav-item">
                                         <a class="dropdown-item">
-                                            <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                            <span class="image"><img src="~/Admin/assets/images/img.jpg" alt="Profile Image" /></span>
                                             <span>
                                                 <span>Minh Hùng</span>
                                                 <span class="time">3 mins ago</span>

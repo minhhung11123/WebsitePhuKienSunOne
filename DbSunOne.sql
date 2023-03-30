@@ -10,7 +10,7 @@ create table Accounts (
 	Email nvarchar(50),
 	Password nvarchar(50),
 	Salt nchar(6),
-	Active bit default 1,
+	Active bit not null,
 	FullName nvarchar(150),
 	RoleID int,
 	LastLogin datetime,
@@ -25,7 +25,7 @@ create table Categories (
 	ParentID int,
 	Levels int,
 	Ordering int,
-	Published int not null default 1,
+	Published bit not null,
 	Thumb nvarchar(250),
 	Title nvarchar(250),
 	Alias nvarchar(250),
@@ -51,7 +51,7 @@ create table Customers (
 	Password nvarchar(50),
 	Salt nchar(6),
 	LastLogin datetime,
-	Active bit default 1
+	Active bit not null
 );
 go
 
@@ -73,8 +73,8 @@ create table Orders (
 	OrderDate datetime,
 	ShipDate datetime,
 	TransactStatusID int,
-	Deleted bit,
-	Paid bit,
+	Deleted bit not null,
+	Paid bit not null,
 	PaymentDate datetime,
 	PaymentID int,
 	Note nvarchar(MAX)
@@ -98,7 +98,7 @@ create table Pages (
 	PageName nvarchar(250),
 	Contents nvarchar(MAX),
 	Thumb nvarchar(250),
-	Published bit not null default 1,
+	Published bit not null,
 	Title nvarchar(250),
 	MetaDesc nvarchar(250),
 	MetaKey nvarchar(250),
@@ -120,9 +120,9 @@ create table Products (
 	Video nvarchar(255),
 	DateCreated datetime,
 	DateModified datetime,
-	BestSellers bit,
-	HomeFlag bit,
-	Active bit,
+	BestSellers bit not null,
+	HomeFlag bit not null,
+	Active bit not null,
 	Tags nvarchar(MAX),
 	Title nvarchar(255),
 	Alias nvarchar(255),
@@ -154,15 +154,15 @@ create table News (
 	SContents nvarchar(255),
 	Contents nvarchar(MAX),
 	Thumb nvarchar(255),
-	Published bit not null default 1,
+	Published bit not null,
 	Alias nvarchar(255),
 	CreateDate datetime,
 	Author nvarchar(255),
 	AccountID int,
 	Tags nvarchar(MAX),
 	CatID int,
-	isHot bit,
-	isNewfeed bit,
+	isHot bit not null,
+	isNewfeed bit not null,
 	MetaKey nvarchar(255),
 	MetaDesc nvarchar(255),
 	Views int
@@ -181,7 +181,7 @@ create table AttributesPrices (
 	AttributeID int,
 	ProductID int,
 	Price int,
-	Active bit
+	Active bit not null
 );
 go
 
@@ -226,12 +226,12 @@ values ('0123456789', 'abc@123', 'admin', '123456', 1, 'ADMIN', 1, '', ''),
 	   ('0123456789', 'abc@123', '123', '123456', 1, '123', 2, '', '');
 go
 
-insert into Categories(CatName)
-values  (N'Cà Vạt'),
-		(N'Dây Nịt'),
-		(N'Khăn'),
-		(N'Nón'),
-		(N'Thắt Lưng'),
-		(N'Vớ'),
-		(N'Khác');
+insert into Categories(CatName, Published)
+values  (N'Cà Vạt', 1),
+		(N'Dây Nịt', 1),
+		(N'Khăn', 1),
+		(N'Nón', 1),
+		(N'Thắt Lưng', 1),
+		(N'Vớ', 1),
+		(N'Khác', 1);
 go
