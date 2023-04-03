@@ -65,21 +65,7 @@
                 }
                 <div class="text-center">
                     <ul class="pagination post-pagination">
-                        @for (int i = 1; i < PageCurrent; i++)
-                        {
-                            <li>
-                                <a href="/news.html?page=@i">@i</a>
-                            </li>
-                        }
-                        <li class="active">
-                            <a href="/news.html?page=@PageCurrent">@PageCurrent</a>
-                        </li>
-                        @for (int i = PageCurrent + 1; i <= ViewBag.TotalPage; i++)
-                        {
-                            <li>
-                                <a href="/news.html?page=@i">@i</a>
-                            </li>
-                        }
+                        <pager class="pager-container" options="@PagedListRenderOptions.Bootstrap4PageNumbersOnly" list="@Model" asp-area="" asp-controller="News" asp-action="Index"/>
                     </ul>
                 </div>
             </div>

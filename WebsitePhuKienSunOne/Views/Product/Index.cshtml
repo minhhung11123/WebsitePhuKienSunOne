@@ -129,21 +129,7 @@
                 </div>
                 <div class="text-center">
                     <ul class="pagination post-pagination">
-                        @for (int i = 1; i < PageCurrent; i++)
-                        {
-                            <li>
-                                <a href="/shop.html?page=@i">@i</a>
-                            </li>
-                        }
-                        <li class="active">
-                            <a href="/shop.html?page=@PageCurrent">@PageCurrent</a>
-                        </li>
-                        @for (int i = PageCurrent + 1; i <= ViewBag.TotalPage; i++)
-                        {
-                            <li>
-                                <a href="/shop.html?page=@i">@i</a>
-                            </li>
-                        }
+                        <pager class="pager-container" options="@PagedListRenderOptions.Bootstrap4PageNumbersPlusFirstAndLast" list="@Model" asp-area="" asp-controller="Product" asp-action="Index" />
                     </ul>
                 </div>
             </div>

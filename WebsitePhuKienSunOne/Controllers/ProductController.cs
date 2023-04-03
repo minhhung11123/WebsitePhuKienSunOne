@@ -30,7 +30,7 @@ namespace WebsitePhuKienSunOne.Controllers
 
             PagedList<Product> models = new PagedList<Product>(lsProduct, pageNumber, pageSize);
 
-            var lsCat = _context.Categories.AsNoTracking().Where(x => x.Alias != "khac").ToList();
+            var lsCat = _context.Categories.AsNoTracking().Where(x => x.Alias != "khac" && x.Published == true).ToList();
 
             ViewBag.CurrentPage = pageNumber;
             ViewBag.TotalPage = models.PageCount;
@@ -52,7 +52,7 @@ namespace WebsitePhuKienSunOne.Controllers
 
                 PagedList<Product> models = new PagedList<Product>(lsProduct, page, pageSize);
 
-                var lsCat = _context.Categories.AsNoTracking().Where(x => x.Alias != "khac").ToList();
+                var lsCat = _context.Categories.AsNoTracking().Where(x => x.Alias != "khac" && x.Published == true).ToList();
 
                 ViewBag.CurrentPage = page;
                 ViewBag.CurrentCat = cat;
