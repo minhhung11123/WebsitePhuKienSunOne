@@ -40,7 +40,7 @@
                                         {
                                             <tr>
                                                 <td>@item.PageId</td>
-                                                <td>@item.PageName</td>
+                                                <td><a href="/page/@item.Alias">@item.PageName</a></td>
                                                 <td>@item.CreateDate.Value.ToString("HH:mm dd/MM/yyyy")</td>
                                                 <td>
                                                     @if (item.Published == true)

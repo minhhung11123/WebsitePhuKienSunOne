@@ -1,0 +1,24 @@
+﻿@model WebsitePhuKienSunOne.Models.Page
+
+@{
+	ViewData["Title"] = Model.Title;
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="page-header">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="content">
+					<h1 class="page-name">@Model.Title</h1>
+					<ol class="breadcrumb">
+						<li><a href="/">Trang chủ</a></li>
+						<li class="active">@Model.Title</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+@Html.Raw(Model.Contents)

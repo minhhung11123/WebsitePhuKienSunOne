@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     int PageCurrent = ViewBag.CurrentPage;
     int PageNext = PageCurrent + 1;
+    var lsNews = ViewBag.LsNews as List<News>;
 }
 
 <section class="page-header">
@@ -14,7 +15,7 @@
                 <div class="content">
                     <h1 class="page-name">Blog</h1>
                     <ol class="breadcrumb">
-                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html">Trang chủ</a></li>
                         <li class="active">blog</li>
                     </ol>
                 </div>
@@ -50,7 +51,7 @@
                                         <a href="#!"><i class="tf-ion-ios-pricetags"></i> LIFESTYLE</a>,<a href="#!"> TRAVEL</a>, <a href="#!">FASHION</a>
                                     </li>
                                     <li>
-                                        <a href="#!"><i class="tf-ion-chatbubbles"></i> 4 COMMENTS</a>
+                                        <i class="tf-ion-chatbubbles"></i> @item.Views lượt xem
                                     </li>
                                 </ul>
                             </div>
@@ -63,9 +64,6 @@
                     }
                 }
                 <div class="text-center">
-                    <ul class="pagination post-pagination">
-                        <pager list="@Model" asp-area="" asp-controller="News" asp-action="Index"></pager>
-                    </ul>
                     <ul class="pagination post-pagination">
                         @for (int i = 1; i < PageCurrent; i++)
                         {
@@ -99,43 +97,23 @@
 
                     <!-- Widget Latest Posts -->
                     <div class="widget widget-latest-post">
-                        <h4 class="widget-title">Latest Posts</h4>
-                        <div class="media">
-                            <a class="pull-left" href="#!">
-                                <img class="media-object" src="~/assets/images/blog/post-thumb.jpg" alt="Image">
-                            </a>
-                            <div class="media-body">
-                                <h4 class="media-heading"><a href="#!">Introducing Swift for Mac</a></h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis, officia.</p>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <a class="pull-left" href="#!">
-                                <img class="media-object" src="~/assets/images/blog/post-thumb-2.jpg" alt="Image">
-                            </a>
-                            <div class="media-body">
-                                <h4 class="media-heading"><a href="#!">Welcome to Themefisher Family</a></h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis, officia.</p>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <a class="pull-left" href="#!">
-                                <img class="media-object" src="~/assets/images/blog/post-thumb-3.jpg" alt="Image">
-                            </a>
-                            <div class="media-body">
-                                <h4 class="media-heading"><a href="#!">Warm welcome from swift</a></h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis, officia.</p>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <a class="pull-left" href="#!">
-                                <img class="media-object" src="~/assets/images/blog/post-thumb.jpg" alt="Image">
-                            </a>
-                            <div class="media-body">
-                                <h4 class="media-heading"><a href="#!">Introducing Swift for Mac</a></h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis, officia.</p>
-                            </div>
-                        </div>
+                        <h4 class="widget-title">BÀI ĐĂNG MỚI NHẤT</h4>
+                        @if (lsNews != null && lsNews.Count() > 0)
+                        {
+                            foreach (var item in lsNews)
+                            {
+                                string url = $"/news/{item.Alias}-{item.PostId}.html";
+                                <div class="media">
+                                    <a class="pull-left" href="@url">
+                                        <img class="media-object" src="~/images/news/@item.Thumb" alt="@item.Title">
+                                    </a>
+                                    <div class="media-body">
+                                        <h4 class="media-heading"><a href="@url">@item.Title</a></h4>
+                                        <p>@item.CreateDate.Value.ToShortDateString()</p>
+                                    </div>
+                                </div>
+                            }
+                        }
                     </div>
                     <!-- End Latest Posts -->
                     <!-- Widget Category -->
