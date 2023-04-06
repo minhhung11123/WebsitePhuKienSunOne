@@ -22,7 +22,7 @@
 	5. Pricing
 	6. Clients
 	7. Instagram Feed 
-	8. User Dashboard
+	8. User Profile
 		8.1 User Profile
 	9. Blog
 		9.1 Post
@@ -1422,65 +1422,65 @@ input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, inp
      object-fit: cover;
 }
 
-.dashboard-menu .active {
+.Profile-menu .active {
   background: #000;
   color: #fff;
   border: 1px solid #000;
 }
-.dashboard-menu li {
+.Profile-menu li {
   padding: 0;
   margin: 0 3px;
 }
-.dashboard-menu li a {
+.Profile-menu li a {
   padding: 10px 20px;
   border: 1px solid #dedede;
   display: inline-block;
 }
 @media (max-width: 768px) {
-  .dashboard-menu li a {
+  .Profile-menu li a {
     padding: 10px 15px;
   }
 }
 @media (max-width: 480px) {
-  .dashboard-menu li a {
+  .Profile-menu li a {
     padding: 10px 5px;
   }
 }
 @media (max-width: 400px) {
-  .dashboard-menu li a {
+  .Profile-menu li a {
     padding: 10px 8px;
     font-size: 12px;
     margin-bottom: 6px;
   }
 }
 
-.dashboard-wrapper {
+.Profile-wrapper {
   border: 1px solid #dedede;
   margin-top: 30px;
   padding: 20px;
 }
-.dashboard-wrapper h2 {
+.Profile-wrapper h2 {
   font-size: 18px;
 }
-.dashboard-wrapper h4 {
+.Profile-wrapper h4 {
   font-size: 16px;
 }
-.dashboard-wrapper .user-img {
+.Profile-wrapper .user-img {
   width: 120px;
   border-radius: 100px;
 }
 
-.dashboard-user-profile .user-img {
+.Profile-user-profile .user-img {
   width: 180px;
 }
-.dashboard-user-profile .user-profile-list {
+.Profile-user-profile .user-profile-list {
   margin-top: 30px;
   padding-left: 30px;
 }
-.dashboard-user-profile .user-profile-list li {
+.Profile-user-profile .user-profile-list li {
   margin-bottom: 8px;
 }
-.dashboard-user-profile .user-profile-list span {
+.Profile-user-profile .user-profile-list span {
   font-weight: bold;
   margin-right: 5px;
   width: 100px;

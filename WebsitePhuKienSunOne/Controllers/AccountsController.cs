@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
@@ -29,8 +30,8 @@ namespace WebsitePhuKienSunOne.Controllers
             _notifyService = notifyService;
         }
 
-        [Route("dashboard.html", Name = "Dashboard")]
-        public IActionResult Dashboard()
+        [Route("Profile.html", Name = "Profile")]
+        public IActionResult Profile()
         {
             var accountId = HttpContext.Session.GetString("CustomerId");
             if (accountId != null)
@@ -39,6 +40,27 @@ namespace WebsitePhuKienSunOne.Controllers
                 if (cs != null)
                 {
                     return View(cs);
+                }
+            }
+            return RedirectToAction("Login");
+        }
+
+        [Route("Dashboard.html", Name = "Dashboard")]
+        public IActionResult Dashboard()
+        {
+            var accountId = HttpContext.Session.GetString("CustomerId");
+            if (accountId != null)
+            {
+                var cs = _context.Customers.AsNoTracking().SingleOrDefault(x => x.CustomerId == Convert.ToInt32(accountId));
+                if (cs != null)
+                {
+                    var lsOrder = _context.Orders
+                        .AsNoTracking()
+                        .Include(x => x.TransactStatus)
+                        .Where(x => x.CustomerId == Convert.ToInt32(accountId))
+                        .OrderByDescending(x => x.OrderDate)
+                        .ToList();
+                    return View(lsOrder);
                 }
             }
             return RedirectToAction("Login");
@@ -67,6 +89,7 @@ namespace WebsitePhuKienSunOne.Controllers
                         Phone = customer.Phone.Trim().ToLower(),
                         Email = customer.Email.Trim().ToLower(),
                         Password = (customer.Password + salt.Trim()).ToMD5(),
+                        Avatar = "default.jpg",
                         Active = true,
                         Salt = salt,
                         CrateDate = DateTime.Now
@@ -75,18 +98,8 @@ namespace WebsitePhuKienSunOne.Controllers
                     {
                         _context.Add(cs);
                         await _context.SaveChangesAsync();
-                        HttpContext.Session.SetString("CustomerId", customer.CustomerId.ToString());
-                        HttpContext.Session.SetString("CustomerName", customer.FullName.ToString());
-                        var customerId = HttpContext.Session.GetString("CustomerId");
-                        var claims = new List<Claim>
-                        {
-                            new Claim(ClaimTypes.Name, customer.FullName),
-                            new Claim("CustomerId", customerId)
-                        };
-                        ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "login");
-                        ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-                        await HttpContext.SignInAsync(claimsPrincipal);
-                        return RedirectToAction("Dashboard", "Accounts");
+                        _notifyService.Success("Đăng ký thành công");
+                        return RedirectToAction("Login", "Accounts");
                     }
                     catch
                     {
@@ -110,9 +123,9 @@ namespace WebsitePhuKienSunOne.Controllers
         public IActionResult Login(string returnUrl = null)
         {
             var accountId = HttpContext.Session.GetString("CustomerId");
-                if (accountId != null)
+            if (accountId != null)
             {
-                return RedirectToAction("Dashboard", "Accounts");
+                return RedirectToAction("Profile", "Accounts");
             }
             return View();
         }
@@ -162,49 +175,101 @@ namespace WebsitePhuKienSunOne.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        public IActionResult ValidatePhone(string Phone)
-        {
-            try
-            {
-                var customer = _context.Customers.AsNoTracking().SingleOrDefault(x => x.Phone.ToLower() == Phone.ToLower());
-                if (customer != null)
-                {
-                    return Json(data: "Số điện thoại : " + Phone + " đã được sử dụng ");
-                }
-                return Json(data: true);
-            }
-            catch
-            {
-                return Json(data: true);
-            }
-        }
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult ValidateEmail(string Email)
-        {
-            try
-            {
-                var customer = _context.Customers.AsNoTracking().SingleOrDefault(x => x.Email.ToLower() == Email.ToLower());
-                if (customer != null)
-                {
-                    return Json(data: "Số điện thoại : " + Email + " đã được sử dụng ");
-                }
-                return Json(data: true);
-            }
-            catch
-            {
-                return Json(data: true);
-            }
-        }
-
-        [HttpGet]
-        [Route("Logout.html", Name ="Logout")]
+        [Route("Logout.html", Name = "Logout")]
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync();
             HttpContext.Session.Remove("CustomerId");
+            HttpContext.Session.Remove("CustomerName");
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAvatar(IFormFile avatar)
+        {
+            var customerId = HttpContext.Session.GetString("CustomerId");
+            if (customerId != null)
+            {
+                var customer = _context.Customers.AsNoTracking().SingleOrDefault(x => x.CustomerId == Convert.ToInt32(customerId));
+                if (customer == null)
+                {
+                    RedirectToAction("Login");
+                }
+                if (avatar != null)
+                {
+                    string extension = Path.GetExtension(avatar.FileName);
+                    string image = Utilities.SEOUrl(customer.FullName) + extension;
+                    customer.Avatar = await Utilities.UploadFile(avatar, @"customers", image.ToLower());
+                }
+                if (string.IsNullOrEmpty(customer.Avatar)) customer.Avatar = "default.jpg";
+                _context.Update(customer);
+                await _context.SaveChangesAsync();
+                _notifyService.Success("Cập nhật ảnh đại diện thành công");
+                return RedirectToAction("Profile");
+            }
+            return RedirectToAction("Login");
+        }
+
+        [HttpGet]
+        [Route("ChangePassword.html", Name = "ChangePassword")]
+        public IActionResult ChangePassword()
+        {
+            var accountId = HttpContext.Session.GetString("CustomerId");
+            if (accountId != null)
+            {
+                var cs = _context.Customers.AsNoTracking().SingleOrDefault(x => x.CustomerId == Convert.ToInt32(accountId));
+                if (cs != null)
+                {
+                    return View();
+                }
+            }
+            return RedirectToAction("Login");
+        }
+
+        [HttpPost]
+        [Route("ChangePassword.html", Name = "ChangePassword")]
+        public IActionResult ChangePassword(ChangePasswordVM model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var customerId = HttpContext.Session.GetString("CustomerId");
+                    if (customerId != null)
+                    {
+                        var customer = _context.Customers.AsNoTracking().SingleOrDefault(x => x.CustomerId == Convert.ToInt32(customerId));
+                        if (customer == null)
+                        {
+                            RedirectToAction("Login");
+                        }
+                        var pass = (model.OldPassword.Trim() + customer.Salt.Trim()).ToMD5();
+                        if (pass == customer.Password)
+                        {
+                            string newpass = (model.NewPassword.Trim() + customer.Salt.Trim()).ToMD5();
+                            customer.Password = newpass;
+                            _context.Update(customer);
+                            _context.SaveChanges();
+                            _notifyService.Success("Đổi mật khẩu thành công");
+                            return RedirectToAction("Profile");
+                        }
+                        else
+                        {
+                            _notifyService.Error("Mật khẩu cũ không chính xác");
+                            return RedirectToAction("ChangePassword");
+                        }
+                    }
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch
+            {
+                _notifyService.Error("Đổi mật khẩu không thành công");
+                return RedirectToAction("Profile");
+            }
         }
     }
 }

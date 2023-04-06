@@ -1,0 +1,73 @@
+﻿@model WebsitePhuKienSunOne.Models.Customer
+
+@{
+    ViewData["Title"] = "Thông tin tài khoản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h1 class="page-name">Thông tin tài khoản</h1>
+                    <ol class="breadcrumb">
+                        <li><a href="/">Trang chủ</a></li>
+                        <li class="active">Tài khoản của tôi</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="user-dashboard page-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="list-inline dashboard-menu text-center">
+                    <li><a href="Dashboard.html">Danh sách đơn hàng</a></li>
+                    <li><a class="active" href="Profile.html">Thông tin tài khoản</a></li>
+                </ul>
+                <div class="dashboard-wrapper dashboard-user-profile">
+                    <div class="media">
+                        <div class="pull-left text-center" href="#!">
+                            <img class="media-object user-img" src="/images/customers/@Model.Avatar" alt="Image">
+                            <a id="change-avatar-btn" href="#x" class="btn btn-transparent mt-20"><b><i>Thay ảnh đại diện</i></b></a>
+                            <form id="avatar-form" asp-controller="Accounts" asp-action="UpdateAvatar" method="post" enctype="multipart/form-data">
+                                <input id="avatar-input" name="avatar" type="file" style="display:none">
+                            </form>
+                        </div>
+                        <div class="media-body">
+                            <ul class="user-profile-list">
+                                <li><span>Họ Tên:</span>@Model.FullName</li>
+                                <li><span>Ngày Sinh:</span>@if (Model.Birthday != null) { Model.Birthday.Value.ToShortDateString(); }</li>
+                                <li><span>Email:</span>@Model.Email</li>
+                                <li><span>Số Điện Thoại:</span>@Model.Phone</li>
+                                <li>
+                                    <span>Địa chỉ:</span>@if (Model.Address != null)
+                                    {
+                                        @Model.Address;
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#change-avatar-btn').click(function (e) {
+                e.preventDefault();
+                $('#avatar-input').click();
+            });
+
+            $('#avatar-input').change(function () {
+                $('#avatar-form').submit();
+            });
+        });
+    </script>
+}

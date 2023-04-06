@@ -441,7 +441,7 @@
 .glyphicon-fullscreen:before {
   content: "\e140"; }
 
-.glyphicon-dashboard:before {
+.glyphicon-Profile:before {
   content: "\e141"; }
 
 .glyphicon-paperclip:before {
@@ -1762,7 +1762,7 @@ legend {
 
 /** Contacts **/
 /* *********  /custom accordion  **************************** */
-/* *********  dashboard widget  **************************** */
+/* *********  Profile widget  **************************** */
 table.tile h3, table.tile h4, table.tile span {
   font-weight: bold;
   vertical-align: middle !important; }
@@ -2052,7 +2052,7 @@ div.box {
   background-color: #E5E5FF; }
 
 /* *********  /tables styling  ****************************** */
-/* *********  /dashboard widget  **************************** */
+/* *********  /Profile widget  **************************** */
 /* *********  widgets  *************************************** */
 ul.msg_list li {
   background: #f7f7f7;
@@ -2139,13 +2139,13 @@ ul.to_do li {
 ul.to_do p {
   margin: 0; }
 
-.dashboard-widget {
+.Profile-widget {
   background: #f6f6f6;
   border-top: 5px solid #79C3DF;
   border-radius: 3px;
   padding: 5px 10px 10px; }
 
-.dashboard-widget .dashboard-widget-title {
+.Profile-widget .Profile-widget-title {
   font-weight: normal;
   border-bottom: 1px solid #c1cdcd;
   margin: 0 0 10px 0;
@@ -2153,7 +2153,7 @@ ul.to_do p {
   padding-left: 40px;
   line-height: 30px; }
 
-.dashboard-widget .dashboard-widget-title i {
+.Profile-widget .Profile-widget-title i {
   font-size: 100%;
   margin-left: -35px;
   margin-right: 10px;
@@ -2182,10 +2182,10 @@ ul.quick-list li i {
   padding-right: 10px;
   color: #757679; }
 
-.dashboard-widget-content {
+.Profile-widget-content {
   padding-top: 9px; }
 
-.dashboard-widget-content .sidebar-widget {
+.Profile-widget-content .sidebar-widget {
   width: 50%;
   display: inline-block;
   vertical-align: top;
@@ -2321,11 +2321,11 @@ span.right {
   width: 12px; }
 
 /** /top tiles **/
-.dashboard_graph {
+.Profile_graph {
   background: #fff;
   padding: 7px 10px; }
 
-.dashboard_graph .col-md-9, .dashboard_graph .col-md-3 {
+.Profile_graph .col-md-9, .Profile_graph .col-md-3 {
   padding: 0; }
 
 a.user-profile {
@@ -3313,10 +3313,10 @@ ul.social li {
 
 /* *********  /profile/social  **************************** */
 /* *********  widgets  **************************** */
-.dashboard_graph .x_title {
+.Profile_graph .x_title {
   padding: 5px 5px 7px; }
 
-.dashboard_graph .x_title h3 {
+.Profile_graph .x_title h3 {
   margin: 0;
   font-weight: normal; }
 
@@ -4684,7 +4684,7 @@ fieldset {
 .progress.progress_sm .progress-bar {
   height: 10px !important; }
 
-.dashboard_graph p {
+.Profile_graph p {
   margin: 0 0 4px; }
 
 ul.verticle_bars {

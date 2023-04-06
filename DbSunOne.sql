@@ -77,6 +77,7 @@ create table Orders (
 	Paid bit not null,
 	PaymentDate datetime,
 	PaymentID int,
+	TotalMoney int,
 	Note nvarchar(MAX)
 );
 go
@@ -172,7 +173,8 @@ go
 create table TransactStatus (
 	TransactStatusID int identity primary key,
 	Status nvarchar(50),
-	Description nvarchar(MAX)
+	Description nvarchar(MAX),
+	Class varchar(50)
 );
 go
 
@@ -234,4 +236,13 @@ values  (N'Cà Vạt', 1),
 		(N'Thắt Lưng', 1),
 		(N'Vớ', 1),
 		(N'Khác', 1);
+go
+
+insert into TransactStatus
+values (N'Chờ xác nhận', N'Đang chờ người bán xác nhận', 'label label-info'),
+       (N'Chờ lấy hàng', N'Đã xác nhận và đang chuẩn bị hàng', 'label label-warning'),
+	   (N'Đang giao', N'Đơn hàng đang được vận chuyển', 'label label-primary'),
+	   (N'Đã giao thành công', N'Đơn hàng đã được giao', 'label label-success'),
+	   (N'Đã hủy', N'Đơn hàng đã được hủy', 'label label-danger'),
+	   (N'Trả hàng', N'Đơn hàng đã được hoàn trả', 'label label-info');
 go

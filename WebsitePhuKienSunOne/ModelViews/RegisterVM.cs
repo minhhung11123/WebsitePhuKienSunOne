@@ -12,13 +12,10 @@ namespace WebsitePhuKienSunOne.ModelViews
         public string FullName { get; set; }
         [Required(ErrorMessage = "Vui lòng nhập Email")]
         [MaxLength(150)]
-        [DataType(DataType.EmailAddress)]
-        [Remote(action: "ValidateEmail", controller: "Accounts")]
+        [EmailAddress(ErrorMessage = "Vui lòng nhập đúng định dạng Email")]
         public string Email { get; set; }
-        [MaxLength(10)]
         [Required(ErrorMessage = "Vui lòng nhập Số điện thoại")]
-        [DataType(DataType.PhoneNumber)]
-        [Remote(action: "ValidatePhone", controller: "Accounts")]
+        [Phone(ErrorMessage = "Vui lòng nhập đúng định dạng Số điện thoại")]
         public string Phone { get; set; }
         [Display(Name = "Mật khẩu")]
         [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]

@@ -14436,13 +14436,13 @@ window.disk_usage_tree =
             },
             {
                 "value": 132,
-                "name": "DashboardClient.framework",
-                "path": "PrivateFrameworks/DashboardClient.framework",
+                "name": "ProfileClient.framework",
+                "path": "PrivateFrameworks/ProfileClient.framework",
                 "children": [
                     {
                         "value": 124,
                         "name": "Versions",
-                        "path": "PrivateFrameworks/DashboardClient.framework/Versions"
+                        "path": "PrivateFrameworks/ProfileClient.framework/Versions"
                     }
                 ]
             },

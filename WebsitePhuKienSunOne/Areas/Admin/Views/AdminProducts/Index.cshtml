@@ -30,6 +30,7 @@
                                         <th>Danh mục</th>
                                         <th>Giá</th>
                                         <th>Tồn kho</th>
+                                        <th>HomeFlag</th>
                                         <th>Trạng thái</th>
                                         <th>#</th>
                                     </tr>
@@ -47,6 +48,12 @@
                                                 <td>@item.Cat.CatName</td>
                                                 <td>@item.Price.Value.ToString("#,##0") VND</td>
                                                 <td>@item.UnitslnStock</td>
+                                                <td>
+                                                    @if (item.HomeFlag)
+                                                    {
+                                                        <p>X</p>
+                                                    }
+                                                </td>
                                                 <td>
                                                     @if (item.UnitslnStock > 0)
                                                     {

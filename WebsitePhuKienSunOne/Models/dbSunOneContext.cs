@@ -342,6 +342,10 @@ namespace WebsitePhuKienSunOne.Models
 
                 entity.Property(e => e.TransactStatusId).HasColumnName("TransactStatusID");
 
+                entity.Property(e => e.Class)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Status).HasMaxLength(50);
             });
 

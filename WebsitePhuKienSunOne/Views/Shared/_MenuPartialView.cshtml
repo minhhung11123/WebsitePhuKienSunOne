@@ -38,14 +38,15 @@
                     </li>
                     <!-- Account -->
                     <li class="dropdown dropdown-slide">
-                        @if (User.Identity.IsAuthenticated)
+                        @if (Accessor.HttpContext.Session.GetString("CustomerName") != null)
                         {
                             <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="350"
                                role="button" aria-haspopup="true" aria-expanded="false">
                                 Chào @Accessor.HttpContext.Session.GetString("CustomerName") <span class="tf-ion-ios-arrow-down"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="/Dashboard.html">Tài khoản của tôi</a></li>
+                                <li><a href="/Profile.html">Tài khoản của tôi</a></li>
+                                <li><a href="/ChangePassword.html">Đổi mật khẩu</a></li>
                                 <li><a href="/Logout.html">Đăng xuất</a></li>
                             </ul>
                         }
@@ -58,7 +59,7 @@
                             <ul class="dropdown-menu">
                                 <li><a href="/Login.html">Đăng nhập</a></li>
                                 <li><a href="/Register.html">Đăng ký</a></li>
-                                <li><a href="/Dashboard.html">Quên mật khẩu</a></li>
+                                <li><a href="/Profile.html">Quên mật khẩu</a></li>
                             </ul>
                         }
                     </li><!-- / Account -->
