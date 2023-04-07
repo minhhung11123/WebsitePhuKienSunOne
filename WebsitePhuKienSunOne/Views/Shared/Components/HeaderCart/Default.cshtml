@@ -1,0 +1,56 @@
+﻿@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor
+@model List<WebsitePhuKienSunOne.ModelViews.CartItem>
+<div class="dropdown-menu cart-dropdown">
+    @if (Model != null && Model.Count() > 0)
+    {
+        foreach (var item in Model)
+        {
+            string url = $"/{item.product.Alias}-{item.product.ProductId}.html";
+            <!-- Cart Item -->
+            <div class="media">
+                <a class="pull-left" href="@url">
+                    <img class="media-object" src="~/images/products/@item.product.Thumb" alt="@item.product.Title" />
+                </a>
+                <div class="media-body">
+                    <h4 class="media-heading"><a href="@url">@item.product.ProductName</a></h4>
+                    <div class="cart-price">
+                        <span>@item.amount x</span>
+                        @if (item.product.Discount > 0)
+                        {
+                            <span>@item.product.Discount.Value.ToString("#,##0") VNĐ</span>
+                        }
+                        else
+                        {
+                            <span>@item.product.Price.Value.ToString("#,##0") VNĐ</span>
+                        }
+                    </div>
+                    <h5><strong>@item.totalMoney.ToString("#,##0") VNĐ</strong></h5>
+                </div>
+            </div>
+
+            <!-- / Cart Item -->
+        }
+        <div class="cart-summary">
+            <span>Tổng: </span>
+            <span class="total-price">@Model.Sum(x=>x.totalMoney).ToString("#,##0") VNĐ</span>
+        </div>
+        <ul class="text-center cart-buttons">
+            <li><a href="cart.html" class="btn btn-small">Xem</a></li>
+            @if (Accessor.HttpContext.Session.GetString("CustomerName") != null)
+            {
+                <li><a href="checkout.html" class="btn btn-small btn-solid-border">Thanh toán</a></li>
+            }
+            else
+            {
+                <li><a href="login.html?returnUrl=checkout.html" class="btn btn-small btn-solid-border">Thanh toán</a></li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>
+            Giỏ hàng của bạn hiện đang trống!
+        </p>
+    }
+</div>

@@ -38,7 +38,7 @@ namespace WebsitePhuKienSunOne.Controllers
             return View(models);
         }
 
-        [Route("/shop/{Alias}", Name = "ListProduct")]
+        [Route("/shop-{Alias}", Name = "ListProduct")]
         public IActionResult List(string Alias, int page = 1)
         {
             try

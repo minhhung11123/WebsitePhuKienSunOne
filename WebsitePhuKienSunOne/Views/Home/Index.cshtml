@@ -51,7 +51,7 @@
             </div>
             <div class="col-md-6">
                 <div class="category-box">
-                    <a href="/shop/@lsCat[0].Alias">
+                    <a href="/shop-@lsCat[0].Alias">
                         <img src="~/images/categories/@lsCat[0].Thumb" alt="@lsCat[0].Title" />
                         <div class="content">
                             <h3>@lsCat[0].Title</h3>
@@ -60,7 +60,7 @@
                     </a>
                 </div>
                 <div class="category-box">
-                    <a href="/shop/@lsCat[1].Alias">
+                    <a href="/shop-@lsCat[1].Alias">
                         <img src="~/images/categories/@lsCat[1].Thumb" alt="@lsCat[1].Title" />
                         <div class="content">
                             <h3>@lsCat[1].Title</h3>
@@ -71,7 +71,7 @@
             </div>
             <div class="col-md-6">
                 <div class="category-box category-box-2">
-                    <a href="/shop/@lsCat[2].Alias">
+                    <a href="/shop-@lsCat[2].Alias">
                         <img src="~/images/categories/@lsCat[2].Thumb" alt="@lsCat[2].Title" />
                         <div class="content">
                             <h3>@lsCat[2].Title</h3>
@@ -112,10 +112,7 @@
                                             <a href="@url"><i class="tf-ion-ios-search-strong"></i></a>
                                         </li>
                                         <li>
-                                            <a href="#!"><i class="tf-ion-ios-heart"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="#!"><i class="tf-ion-android-cart"></i></a>
+                                            <a class="addCart" href="#" data-pdId="@item.ProductId"><i class="tf-ion-android-cart"></i></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -138,3 +135,34 @@
         </div>
     </div>
 </section>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $(".addCart").click(function () {
+                    var productId = $(this).attr("data-pdId");
+                    $.ajax({
+                        url: 'api/cart/add',
+                        type: "POST",
+                        dataType: "JSON",
+                        data: {
+                            productId: productId,
+                        },
+                        success: function (response) {
+                            loadHeaderCart();
+                            location.reload();
+                        },
+                        error: function (error) {
+                            alert("There was an error posting the data to the server: " + error.responseText); // Fixed syntax error
+                        }
+                    });
+                });
+            });
+
+            function loadHeaderCart() {
+                $("#miniCart").load("/AjaxContent/HeaderCart");
+                $("#numberCart").load("/AjaxContent/NumberCart");
+            }
+        });
+    </script>
+}

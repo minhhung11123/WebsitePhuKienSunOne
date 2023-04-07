@@ -1,0 +1,173 @@
+﻿@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor
+@model List<WebsitePhuKienSunOne.ModelViews.CartItem>
+@{
+    ViewData["Title"] = "Giỏ hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h1 class="page-name">Giỏ hàng</h1>
+                    <ol class="breadcrumb">
+                        <li><a href="/">Trang chủ</a></li>
+                        <li class="active">Giỏ hàng</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@if (Model.Count() > 0)
+{
+    <div class="page-wrapper">
+        <div class="cart shopping">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="block">
+                            <div class="product-list">
+                                <form method="post">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="">Ảnh</th>
+                                                <th class="">Tên sản phẩm</th>
+                                                <th class="">Đơn giá</th>
+                                                <th class="">Số lượng</th>
+                                                <th class="">Thành tiền</th>
+                                                <th class=""></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model != null && Model.Count() > 0)
+                                            {
+                                                foreach (var item in Model)
+                                                {
+                                                    string url = $"/{item.product.Alias}-{item.product.ProductId}.html";
+                                                    <tr class="">
+                                                        <td class="">
+                                                            <div class="product-info">
+                                                                <img width="80" src="~/images/products/@item.product.Thumb" alt="@item.product.Title" />
+                                                            </div>
+                                                        </td>
+                                                        <td class="">
+                                                            <div class="product-info">
+                                                                <a href="@url">@item.product.ProductName</a>
+                                                            </div>
+                                                        </td>
+                                                        @if (item.product.Discount > 0)
+                                                        {
+                                                            <td class=""><del>@item.product.Price.Value.ToString("#,##0") VNĐ</del><br> @item.product.Discount.Value.ToString("#,##0") VNĐ</td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="">@item.product.Price.Value.ToString("#,##0") VNĐ</td>
+                                                        }
+                                                        <td class="">
+                                                            <input data-pdId="@item.product.ProductId" asp-for="@item.amount" class="cartItem" type="number" style="width:50px; text-align:center" min="1">
+                                                        </td>
+                                                        <td class="">@item.totalMoney.ToString("#,##0") VNĐ</td>
+                                                        <td class="">
+                                                            <a class="product-remove" href="#" data-pdId="@item.product.ProductId">Xóa</a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <div class="pull-right">
+                                        <p><b>Tổng tiền: &ensp; @Model.Sum(x => x.totalMoney).ToString("#,##0") VNĐ</b></p>
+                                        @if (Accessor.HttpContext.Session.GetString("CustomerName") != null)
+                                        {
+                                            <a href="checkout.html" class="btn btn-main pull-right">Thanh toán</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="login.html?returnUrl=checkout.html" class="btn btn-main pull-right">Thanh toán</a>
+                                        }
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <section class="empty-cart page-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="block text-center">
+                        <i class="tf-ion-ios-cart-outline"></i>
+                        <h2 class="text-center">Giỏ hàng của bạn hiện đang trống!</h2>
+                        <a href="/" class="btn btn-main mt-20">Quay lại cửa hàng</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+@section Scripts{
+    <script>
+        $(function () {
+            function loadHeaderCart() {
+                $("#miniCart").load("/AjaxContent/HeaderCart");
+                $("#numberCart").load("/AjaxContent/NumberCart");
+            }
+            $(".cartItem").change(function () {
+                var productId = $(this).attr("data-pdId");
+                var qtt = parseInt($(this).val());
+                if (qtt > 0) {
+                    $.ajax({
+                        url: "api/cart/update",
+                        type: "POST",
+                        dataType: "JSON",
+                        data: {
+                            productID: productId,
+                            amount: qtt
+                        },
+                        success: function (result) {
+                            if (result.success) {
+                                loadHeaderCart();
+                                window.location = "cart.html";
+                            }
+                        },
+                        error: function () {
+                            alert("Cập nhật giỏ hàng thất bại!");
+                        }
+                    });
+                }
+            });
+            $(".product-remove").click(function () {
+                var productId = $(this).attr("data-pdId");
+                $.ajax({
+                    url: "api/cart/remove",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        productID: productId
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            loadHeaderCart();
+                            window.location = "cart.html";
+                        }
+                    },
+                    error: function () {
+                        alert("Xóa sản phẩm khỏi giỏ hàng không thành công");
+                    }
+                });
+            });
+        });
+    </script>
+}
