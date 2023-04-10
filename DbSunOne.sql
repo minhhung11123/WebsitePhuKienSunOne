@@ -60,8 +60,6 @@ create table Locations (
 	Name nvarchar(100),
 	Type nvarchar(20),
 	Slug nvarchar(100),
-	NameWithType nvarchar(255),
-	PathWithType nvarchar(255),
 	ParentCode int,
 	Levels int
 );
@@ -216,7 +214,24 @@ add foreign key (RoleID) references Roles(RoleID)
 
 alter table Customers
 add foreign key (LocationID) references Locations(LocationID)
-go
+
+alter table Customers
+add foreign key (District) references Locations(LocationID)
+
+alter table Customers
+add foreign key (Ward) references Locations(LocationID)
+
+alter table Orders
+add foreign key (City) references Locations(LocationID)
+
+alter table Orders
+add foreign key (District) references Locations(LocationID)
+
+alter table Orders
+add foreign key (Ward) references Locations(LocationID)
+
+alter table OrderDetails
+add foreign key (ProductID) references Products(ProductID)
 
 insert into Roles
 values (1, 'Admin', N'Quản lý'),

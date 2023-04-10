@@ -36,7 +36,7 @@
                     <li>
                         <a><i class="fa fa-edit"></i> Quản lý đơn hàng <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="form.html">General Form</a></li>
+                            <li><a asp-area="Admin" asp-controller="AdminOrders" asp-action="Index">Danh sách đơn hàng</a></li>
                         </ul>
                     </li>
                     <li>
@@ -62,9 +62,9 @@
                         <a><i class="fa fa-clone"></i> Quản lý hệ thống <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a asp-area="Admin" asp-controller="AdminAccounts" asp-action="Index">Quản lý tài khoản</a></li>
-                            <li><a asp-area ="Admin" asp-controller="AdminCategories" asp-action="Index">Quản lý danh mục</a></li>
+                            <li><a asp-area="Admin" asp-controller="AdminCategories" asp-action="Index">Quản lý danh mục</a></li>
                             <li><a asp-area="Admin" asp-controller="Roles" asp-action="Index">Quản lý quyền truy cập</a></li>
-                            <li><a href="fixed_sidebar.html">Quản lý tỉnh thành</a></li>
+                            <li><a asp-area="Admin" asp-controller="AdminLocations" asp-action="Index">Quản lý tỉnh thành</a></li>
                         </ul>
                     </li>
                     <li>

@@ -157,10 +157,20 @@ namespace WebsitePhuKienSunOne.Models
                     .HasMaxLength(6)
                     .IsFixedLength(true);
 
+                entity.HasOne(d => d.DistrictNavigation)
+                    .WithMany(p => p.CustomerDistrictNavigations)
+                    .HasForeignKey(d => d.District)
+                    .HasConstraintName("FK__Customers__Distr__5441852A");
+
                 entity.HasOne(d => d.Location)
-                    .WithMany(p => p.Customers)
+                    .WithMany(p => p.CustomerLocations)
                     .HasForeignKey(d => d.LocationId)
-                    .HasConstraintName("FK__Customers__Locat__44FF419A");
+                    .HasConstraintName("FK__Customers__Locat__534D60F1");
+
+                entity.HasOne(d => d.WardNavigation)
+                    .WithMany(p => p.CustomerWardNavigations)
+                    .HasForeignKey(d => d.Ward)
+                    .HasConstraintName("FK__Customers__Ward__5535A963");
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -168,10 +178,6 @@ namespace WebsitePhuKienSunOne.Models
                 entity.Property(e => e.LocationId).HasColumnName("LocationID");
 
                 entity.Property(e => e.Name).HasMaxLength(100);
-
-                entity.Property(e => e.NameWithType).HasMaxLength(255);
-
-                entity.Property(e => e.PathWithType).HasMaxLength(255);
 
                 entity.Property(e => e.Slug).HasMaxLength(100);
 
@@ -228,31 +234,51 @@ namespace WebsitePhuKienSunOne.Models
 
                 entity.Property(e => e.TransactStatusId).HasColumnName("TransactStatusID");
 
+                entity.HasOne(d => d.CityNavigation)
+                    .WithMany(p => p.OrderCityNavigations)
+                    .HasForeignKey(d => d.City)
+                    .HasConstraintName("FK__Orders__City__5629CD9C");
+
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CustomerId)
                     .HasConstraintName("FK__Orders__Customer__403A8C7D");
 
+                entity.HasOne(d => d.DistrictNavigation)
+                    .WithMany(p => p.OrderDistrictNavigations)
+                    .HasForeignKey(d => d.District)
+                    .HasConstraintName("FK__Orders__District__571DF1D5");
+
                 entity.HasOne(d => d.TransactStatus)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.TransactStatusId)
                     .HasConstraintName("FK__Orders__Transact__3F466844");
+
+                entity.HasOne(d => d.WardNavigation)
+                    .WithMany(p => p.OrderWardNavigations)
+                    .HasForeignKey(d => d.Ward)
+                    .HasConstraintName("FK__Orders__Ward__5812160E");
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
             {
                 entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
 
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
-
-                entity.Property(e => e.ShipDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.OrderId)
                     .HasConstraintName("FK__OrderDeta__Order__3E52440B");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK__OrderDeta__Produ__59063A47");
             });
 
             modelBuilder.Entity<Page>(entity =>

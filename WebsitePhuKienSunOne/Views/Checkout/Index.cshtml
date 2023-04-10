@@ -5,6 +5,7 @@
     List<WebsitePhuKienSunOne.ModelViews.CartItem> cart = ViewBag.Cart;
 }
 
+
 <section class="page-header">
     <div class="container">
         <div class="row">
@@ -25,9 +26,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <div class="block billing-details">
-                        <h4 class="widget-title">Thông tin người nhận</h4>
-                        <form asp-controller="Checkout" asp-action="Index" method="post" class="checkout-form">
+                    <form asp-controller="Checkout" asp-action="Index" method="post" class="checkout-form">
+                        <div class="block billing-details">
+                            <h4 class="widget-title">Thông tin người nhận</h4>
                             <div class="form-group">
                                 <label for="full_name">Họ tên</label>
                                 <input asp-for="FullName" type="text" class="form-control" id="full_name" placeholder="">
@@ -39,28 +40,37 @@
                             <div class="form-group">
                                 <label for="user_address">Địa chỉ</label>
                                 <input asp-for="Address" type="text" class="form-control" id="user_address" placeholder="">
+                                <span asp-validation-for="Address" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label for="user_country">Tỉnh/Thành</label>
-                                <input type="text" class="form-control" id="user_country" placeholder="">
+                                <select asp-for="City" class="form-control" style="height:50px" asp-items="ViewBag.lsCity">
+                                    <option value="0" disabled selected>Tỉnh/Thành</option>
+                                    <span asp-validation-for="City" class="text-danger"></span>
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="user_country">Quận/Huyện</label>
-                                <input type="text" class="form-control" id="user_country" placeholder="">
+                                <select asp-for="District" class="form-control" style="height:50px">
+                                    <option value="0" disabled selected>Quận/Huyện</option>
+                                    <span asp-validation-for="District" class="text-danger"></span>
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="user_country">Xã/Phường</label>
-                                <input type="text" class="form-control" id="user_country" placeholder="">
+                                <select asp-for="Ward" class="form-control" style="height:50px">
+                                    <option value="0" disabled selected>Xã/Phường</option>
+                                </select>
+                                <span asp-validation-for="Ward" class="text-danger"></span>
                             </div>
-                        </form>
-                    </div>
-                    <div class="block">
-                        <h4 class="widget-title">Phương thức thanh toán</h4>
-                        <p>Credit Cart Details (Secure payment)</p>
-                        <div class="checkout-product-details">
-                            <div class="payment">
-                                <div class="card-details">
-                                    <form class="checkout-form">
+                            <div class="form-group">
+                                <label for="user_country">Ghi chú</label>
+                                <input asp-for="Note" type="text" class="form-control" id="user_country" placeholder="">
+                            </div>
+                        </div>
+                        <div class="block">
+                            <h4 class="widget-title">Phương thức thanh toán</h4>
+                            <p>Credit Cart Details (Secure payment)</p>
+                            <div class="checkout-product-details">
+                                <div class="payment">
+                                    <div class="card-details">
                                         <div class="form-group">
                                             <label for="card-number">Card Number <span class="required">*</span></label>
                                             <input id="card-number" class="form-control" type="tel" placeholder="•••• •••• •••• ••••">
@@ -73,12 +83,12 @@
                                             <label for="card-cvc">Card Code <span class="required">*</span></label>
                                             <input id="card-cvc" class="form-control" type="tel" maxlength="4" placeholder="CVC">
                                         </div>
-                                        <a href="confirmation.html" class="btn btn-main mt-20">Đặt hàng</a>
-                                    </form>
+                                        <button type="submit" class="btn btn-main mt-20">Đặt hàng </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="col-md-4">
                     <div class="product-checkout-details">
@@ -98,11 +108,13 @@
                                                 @item.amount x
                                                 @if (item.product.Discount > 0)
                                                 {
-                                                    @item.product.Discount.Value.ToString("#,##0");
+                                                    @item.product.Discount.Value.ToString("#,##0")
+                                                    ;
                                                 }
                                                 else
                                                 {
-                                                    @item.product.Price.Value.ToString("#,##0");
+                                                    @item.product.Price.Value.ToString("#,##0")
+                                                    ;
                                                 }
                                                 VNĐ
                                             </p>
@@ -134,3 +146,50 @@
         </div>
     </div>
 </div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $('#City').change(function () {
+                    var cityId = $(this).val();
+                    $.ajax({
+                        url: '/Location/ListDistrict',
+                        data: { id: cityId },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (districts) {
+                            $("#District").empty();
+                            $("#Ward").empty();
+                            var strWard = '<option value="" disabled selected>Xã/Phường</option>';
+                            $("#Ward").append(strWard);
+                            var strDistrict = '<option value="" disabled selected>Quận/Huyện</option>';
+                            $("#District").append(strDistrict);
+                            $.each(districts, function (i, item) {
+                                var option = '<option value="' + item.locationId + '">' + item.name + '</option>';
+                                $("#District").append(option);
+                            });
+                        }
+                    });
+                });
+                $('#District').change(function () {
+                    var districtId = $(this).val();
+                    $.ajax({
+                        url: '/Location/ListWard',
+                        data: { id: districtId },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (wards) {
+                            $("#Ward").empty();
+                            var strWard = '<option value="" disabled selected>Xã/Phường</option>';
+                            $("#Ward").append(strWard);
+                            $.each(wards, function (i, item) {
+                                var option = '<option value="' + item.locationId + '">' + item.name + '</option>';
+                                $("#Ward").append(option);
+                            });
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}

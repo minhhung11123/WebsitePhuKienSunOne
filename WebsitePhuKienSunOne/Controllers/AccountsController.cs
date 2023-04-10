@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using WebsitePhuKienSunOne.Extension;
 using WebsitePhuKienSunOne.Helpper;
@@ -64,6 +65,31 @@ namespace WebsitePhuKienSunOne.Controllers
                 }
             }
             return RedirectToAction("Login");
+        }
+
+        [Route("ViewDetail-{id}", Name = "ViewDetail")]
+        public IActionResult ViewDetail(int id)
+        {
+            var csID = HttpContext.Session.GetString("CustomerId");
+            var order = _context.Orders
+                .AsNoTracking()
+                .Include(x => x.Customer)
+                .Include(x => x.TransactStatus)
+                .Include(x => x.WardNavigation)
+                .Include(x => x.CityNavigation)
+                .Include(x => x.DistrictNavigation)
+                .FirstOrDefault(x => x.OrderId == id && x.CustomerId == Int32.Parse(csID));
+            if (order == null)
+            {
+                return NotFound();
+            }
+            var orderDetails = _context.OrderDetails
+                .AsNoTracking()
+                .Include(x => x.Product)
+                .Where(x => x.OrderId == id)
+                .ToList();
+            ViewBag.OrderDetails = orderDetails;
+            return View(order);
         }
 
         [HttpGet]
@@ -150,8 +176,12 @@ namespace WebsitePhuKienSunOne.Controllers
                     }
                     if (!cs.Active)
                     {
-                        return RedirectToAction("Notify", "Accounts");
+                        _notifyService.Warning("Tài khoản của bạn đã bị khóa");
+                        return View(customer);
                     }
+                    cs.LastLogin = DateTime.Now;
+                    _context.Update(cs);
+                    _context.SaveChanges();
                     HttpContext.Session.SetString("CustomerId", cs.CustomerId.ToString());
                     HttpContext.Session.SetString("CustomerName", cs.FullName.ToString());
                     var customerId = HttpContext.Session.GetString("CustomerId");

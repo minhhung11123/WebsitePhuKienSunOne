@@ -23,9 +23,15 @@ namespace WebsitePhuKienSunOne.Models
         public int? PaymentId { get; set; }
         public string Note { get; set; }
         public int TotalMoney { get; set; }
+        public int? City { get; set; }
+        public int? District { get; set; }
+        public int? Ward { get; set; }
 
+        public virtual Location CityNavigation { get; set; }
         public virtual Customer Customer { get; set; }
+        public virtual Location DistrictNavigation { get; set; }
         public virtual TransactStatus TransactStatus { get; set; }
+        public virtual Location WardNavigation { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

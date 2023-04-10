@@ -55,7 +55,7 @@
                                             <td>@item.ShipDate</td>
                                             <td><span class="@item.TransactStatus.Class">@item.TransactStatus.Status</span></td>
                                             <td>@item.TotalMoney.ToString("#,##0") VND</td>
-                                            <td><a href="order.html" class="btn btn-default">View</a></td>
+                                            <td><a href="/viewdetail-@item.OrderId" class="btn btn-default">View</a></td>
                                         </tr>
                                     }
                                 </tbody>
