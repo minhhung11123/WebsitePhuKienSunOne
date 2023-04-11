@@ -9,7 +9,6 @@ namespace WebsitePhuKienSunOne.Models
     {
         public Product()
         {
-            AttributesPrices = new HashSet<AttributesPrice>();
             OrderDetails = new HashSet<OrderDetail>();
         }
 
@@ -34,7 +33,6 @@ namespace WebsitePhuKienSunOne.Models
         public int? UnitslnStock { get; set; }
 
         public virtual Category Cat { get; set; }
-        public virtual ICollection<AttributesPrice> AttributesPrices { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

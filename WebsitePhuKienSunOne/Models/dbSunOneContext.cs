@@ -18,8 +18,6 @@ namespace WebsitePhuKienSunOne.Models
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
-        public virtual DbSet<Attribute> Attributes { get; set; }
-        public virtual DbSet<AttributesPrice> AttributesPrices { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
@@ -29,7 +27,6 @@ namespace WebsitePhuKienSunOne.Models
         public virtual DbSet<Page> Pages { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
-        public virtual DbSet<Shipper> Shippers { get; set; }
         public virtual DbSet<TransactStatus> TransactStatuses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -73,32 +70,6 @@ namespace WebsitePhuKienSunOne.Models
                     .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.RoleId)
                     .HasConstraintName("FK__Accounts__RoleID__440B1D61");
-            });
-
-            modelBuilder.Entity<Attribute>(entity =>
-            {
-                entity.Property(e => e.AttributeId).HasColumnName("AttributeID");
-
-                entity.Property(e => e.Name).HasMaxLength(250);
-            });
-
-            modelBuilder.Entity<AttributesPrice>(entity =>
-            {
-                entity.Property(e => e.AttributesPriceId).HasColumnName("AttributesPriceID");
-
-                entity.Property(e => e.AttributeId).HasColumnName("AttributeID");
-
-                entity.Property(e => e.ProductId).HasColumnName("ProductID");
-
-                entity.HasOne(d => d.Attribute)
-                    .WithMany(p => p.AttributesPrices)
-                    .HasForeignKey(d => d.AttributeId)
-                    .HasConstraintName("FK__Attribute__Attri__4316F928");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.AttributesPrices)
-                    .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK__Attribute__Produ__4222D4EF");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -343,23 +314,6 @@ namespace WebsitePhuKienSunOne.Models
                 entity.Property(e => e.Description).HasMaxLength(50);
 
                 entity.Property(e => e.RoleName).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<Shipper>(entity =>
-            {
-                entity.Property(e => e.ShipperId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ShipperID");
-
-                entity.Property(e => e.Company).HasMaxLength(150);
-
-                entity.Property(e => e.Phone)
-                    .HasMaxLength(10)
-                    .IsFixedLength(true);
-
-                entity.Property(e => e.ShipDate).HasColumnType("datetime");
-
-                entity.Property(e => e.ShipperName).HasMaxLength(150);
             });
 
             modelBuilder.Entity<TransactStatus>(entity =>
