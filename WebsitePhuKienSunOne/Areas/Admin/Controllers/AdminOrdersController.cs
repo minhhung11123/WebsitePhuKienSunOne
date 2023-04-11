@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,13 +12,16 @@ using WebsitePhuKienSunOne.Models;
 namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize("RequireAdminRole")]
     public class AdminOrdersController : Controller
     {
         private readonly dbSunOneContext _context;
+        private INotyfService _notyf;
 
-        public AdminOrdersController(dbSunOneContext context)
+        public AdminOrdersController(dbSunOneContext context, INotyfService notyf)
         {
             _context = context;
+            _notyf = notyf;
         }
 
         // GET: Admin/AdminOrders
@@ -26,7 +31,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
                 .Include(o => o.Customer)
                 .Include(o => o.TransactStatus)
                 .AsNoTracking()
-                .OrderByDescending(x=>x.OrderDate);
+                .OrderByDescending(x => x.OrderDate);
             return View(await dbSunOneContext.ToListAsync());
         }
 
@@ -50,72 +55,17 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return View(order);
-        }    
-
-        // GET: Admin/AdminOrders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-            ViewData["City"] = new SelectList(_context.Locations, "LocationId", "LocationId", order.City);
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "CustomerId", order.CustomerId);
-            ViewData["District"] = new SelectList(_context.Locations, "LocationId", "LocationId", order.District);
-            ViewData["TransactStatusId"] = new SelectList(_context.TransactStatuses, "TransactStatusId", "TransactStatusId", order.TransactStatusId);
-            ViewData["Ward"] = new SelectList(_context.Locations, "LocationId", "LocationId", order.Ward);
+            var orderDetail = _context.OrderDetails
+                .AsNoTracking()
+                .Include(x => x.Product)
+                .Where(x => x.OrderId == order.OrderId)
+                .OrderBy(x => x.OrderDetailId)
+                .ToList();
+            ViewBag.OrderDetail = orderDetail;
             return View(order);
         }
 
-        // POST: Admin/AdminOrders/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,CustomerId,OrderDate,ShipDate,TransactStatusId,Deleted,Paid,PaymentDate,PaymentId,Note,TotalMoney,City,District,Ward")] Order order)
-        {
-            if (id != order.OrderId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderExists(order.OrderId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["City"] = new SelectList(_context.Locations, "LocationId", "LocationId", order.City);
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "CustomerId", order.CustomerId);
-            ViewData["District"] = new SelectList(_context.Locations, "LocationId", "LocationId", order.District);
-            ViewData["TransactStatusId"] = new SelectList(_context.TransactStatuses, "TransactStatusId", "TransactStatusId", order.TransactStatusId);
-            ViewData["Ward"] = new SelectList(_context.Locations, "LocationId", "LocationId", order.Ward);
-            return View(order);
-        }
-
-        // GET: Admin/AdminOrders/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> ChangeStatus(int? id)
         {
             if (id == null)
             {
@@ -133,19 +83,57 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
+            var orderDetail = _context.OrderDetails
+               .AsNoTracking()
+               .Include(x => x.Product)
+               .Where(x => x.OrderId == order.OrderId)
+               .OrderBy(x => x.OrderDetailId)
+               .ToList();
+            ViewBag.OrderDetail = orderDetail;
+            ViewData["Status"] = new SelectList(_context.TransactStatuses, "TransactStatusId", "Status", order.TransactStatusId);
             return View(order);
         }
 
-        // POST: Admin/AdminOrders/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatus(int id, int TransactStatusId, bool paid)
         {
-            var order = await _context.Orders.FindAsync(id);
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var order = await _context.Orders.FindAsync(id);
+                if (order == null) { return NotFound(); }
+                order.TransactStatusId = TransactStatusId;
+                if (TransactStatusId == 3)
+                {
+                    order.ShipDate = DateTime.Now;
+                }
+                if (!order.Paid)
+                {
+                    if (paid)
+                    {
+                        order.Paid = true;
+                        order.PaymentDate = DateTime.Now;
+                    }
+                }
+                if(TransactStatusId == 5)
+                {
+                    order.Deleted = true;
+                }
+                _context.Update(order);
+                await _context.SaveChangesAsync();
+                _notyf.Success("Cập nhật trạng thái đơn hàng thành công");
+            }
+            catch
+            {
+                if (!OrderExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction("Index");
         }
 
         private bool OrderExists(int id)

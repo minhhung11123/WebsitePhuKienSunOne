@@ -94,7 +94,7 @@
                             Ảnh đại diện <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 ">
-                            <input name ="fThumb" asp-for="Thumb" type="file" class="form-control-file">
+                            <input name="fThumb" asp-for="Thumb" type="file" class="form-control-file">
                             <span asp-validation-for="Thumb" class="text-danger"></span>
                         </div>
                     </div>
@@ -108,12 +108,12 @@
                         </div>
                     </div>
                     <div class="item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3 label-align" ></label>
+                        <label class="col-form-label col-md-3 col-sm-3 label-align"></label>
                         <div class="col-md-6 col-sm-6 ">
                             <input type="checkbox" asp-for="Active" class="js-switch" checked="checked"> Public
-                            <br/><br/>
+                            <br /><br />
                             <input type="checkbox" asp-for="HomeFlag" class="js-switch"> HomeFlag
-                            <br/><br/>
+                            <br /><br />
                             <input type="checkbox" asp-for="BestSellers" class="js-switch"> BestSellers
                         </div>
                     </div>
@@ -184,7 +184,7 @@
     <!-- summernote -->
     <script src="~/Admin/summernote/summernote-bs4.js"></script>
     <script>
-        jQuery(document).ready(function(){
+        jQuery(document).ready(function () {
             $('.summernote').summernote({
                 fontName: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New'],
                 styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5'],

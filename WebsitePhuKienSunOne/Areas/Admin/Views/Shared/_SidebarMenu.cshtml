@@ -1,4 +1,6 @@
-﻿
+﻿@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor
+
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -17,7 +19,7 @@
             </div>
             <div class="profile_info">
                 <span>Xin chào,</span>
-                <h2>Minh Hùng</h2>
+                <h2>@Accessor.HttpContext.Session.GetString("AdminName")</h2>
             </div>
         </div>
         <!-- /menu profile quick info -->
@@ -49,7 +51,6 @@
                         <a><i class="fa fa-table"></i> Quản lý khách hàng <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a asp-area="Admin" asp-controller="AdminCustomers" asp-action="Index">Danh sách khách hàng</a></li>
-                            <li><a href="tables.html">Tìm kiếm khách hàng</a></li>
                         </ul>
                     </li>
                     <li>
@@ -71,12 +72,6 @@
                         <a><i class="fa fa-clone"></i> Quản lý tin tức <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a asp-area="Admin" asp-controller="AdminNews" asp-action="Index">Danh sách tin tức</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a><i class="fa fa-clone"></i> Quản lý Shipper <span class="fa fa-chevron-down"></span></a>
-                        <ul class="nav child_menu">
-                            <li><a href="fixed_sidebar.html">Fixed Sidebar</a></li>
                         </ul>
                     </li>
                     <li>

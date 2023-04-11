@@ -99,13 +99,13 @@
                 {
                     string url = $"/{item.Alias}-{item.ProductId}.html";
                     <div class="col-md-4">
-                        <div class="product-item">
+                        <div class="product-item" style="height:600px">
                             <div class="product-thumb">
                                 @if (item.Discount > 0)
                                 {
                                     <span class="bage">Sale</span>
                                 }
-                                <img class="img-responsive" src="~/images/products/@item.Thumb" alt="@item.Title" />
+                                <img class="img-responsive" src="~/images/products/@item.Thumb" alt="@item.Title"/>
                                 <div class="preview-meta">
                                     <ul>
                                         <li>

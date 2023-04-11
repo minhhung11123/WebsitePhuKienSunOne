@@ -45,7 +45,14 @@
                                                 <td>@item.Email</td>
                                                 <td>@item.Phone</td>
                                                 <td>@item.Address</td>
-                                                <td>@item.Location.Name</td>
+                                                @if(item.LocationId == null)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.Location.Name</td>
+                                                }
                                                 <td>
                                                     <a class="fa fa-search" asp-controller="AdminCustomers" asp-action="Details" asp-route-id="@item.CustomerId"> Xem</a>
                                                     &nbsp&nbsp&nbsp

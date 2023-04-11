@@ -40,7 +40,7 @@
                         <div class="media-body">
                             <ul class="user-profile-list">
                                 <li><span>Họ Tên:</span>@Model.FullName</li>
-                                <li><span>Ngày Sinh:</span>@if (Model.Birthday != null) { Model.Birthday.Value.ToShortDateString(); }</li>
+                                <li><span>Ngày Sinh:</span>@Model.Birthday.Value.ToShortDateString() </li>
                                 <li><span>Email:</span>@Model.Email</li>
                                 <li><span>Số Điện Thoại:</span>@Model.Phone</li>
                                 <li>

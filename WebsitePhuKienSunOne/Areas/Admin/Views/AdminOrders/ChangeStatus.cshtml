@@ -1,11 +1,23 @@
 ﻿@model WebsitePhuKienSunOne.Models.Order
 
 @{
-    ViewData["Title"] = "Chi tiết đơn hàng";
+    ViewData["Title"] = "Thay đổi trạng thái đơn hàng";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
     List<OrderDetail> od = ViewBag.OrderDetail;
 }
-
+@section Styles{
+    <!-- bootstrap-wysiwyg -->
+    <link href="~/Admin/vendors/google-code-prettify/bin/prettify.min.css" rel="stylesheet">
+    <!-- Select2 -->
+    <link href="~/Admin/vendors/select2/dist/css/select2.min.css" rel="stylesheet">
+    <!-- Switchery -->
+    <link href="~/Admin/vendors/switchery/dist/switchery.min.css" rel="stylesheet">
+    <!-- starrr -->
+    <link href="~/Admin/vendors/starrr/dist/starrr.css" rel="stylesheet">
+    <!-- summernote -->
+    <link href="~/Admin/summernote/summernote-bs4.css" rel="stylesheet" />
+    <link href="~/Admin/summernote/summernote.css" rel="stylesheet" />
+}
 <div class="">
     <div class="page-title">
         <div class="title_left">
@@ -49,12 +61,11 @@
                                 <br>
                                 <b>Ngày Ship Hàng:</b> @Model.ShipDate
                                 <br>
-                                <b>Thanh Toán:</b> @(Model.Paid ? "Đã thanh toán" : "Đã thanh toán")
+                                <b>Thanh Toán:</b> @(Model.Paid ? "Đã Thanh Toán" : "Chưa Thanh Toán")
                                 <br>
                                 <b>Ngày Thanh Toán:</b> @(Model.Paid ? Model.PaymentDate : "")
                                 <br>
-                                <b>Trạng Thái Đơn Hàng:</b> @Model.TransactStatus.Status
-                                <br>
+
                                 <b>Ghi Chú: </b> @Model.Note
                             </div>
                             <!-- /.col -->
@@ -104,7 +115,24 @@
                         <!-- /.row -->
 
                         <div class="row">
-                            <div class="col-md-6"></div>
+                            <div class="col-md-6">
+                                <b>Trạng Thái Đơn Hàng:</b>
+                                <form asp-action="ChangeStatus" method="post">
+                                    <input asp-for="OrderId" type="hidden" />
+                                    <select class="form-control" asp-for="TransactStatusId" asp-items="ViewBag.Status"></select>
+                                    <br>
+                                    @if (Model.Paid)
+                                    {
+                                        <div><input disabled="disabled" type="checkbox" asp-for="Paid" class="js-switch"> Đã thanh toán </div>
+                                    }
+                                    else
+                                    {
+                                        <div><input type="checkbox" asp-for="Paid" class="js-switch"> Đã thanh toán </div>
+                                    }
+                                    <br>
+                                    <button class="btn btn-success" type="submit">Thay đổi trạng thái</button>
+                                </form>
+                            </div>
                             <!-- /.col -->
                             <div class="col-md-6">
                                 <div class="table-responsive">
@@ -127,3 +155,23 @@
         </div>
     </div>
 </div>
+@section Scripts{
+    <!-- bootstrap-wysiwyg -->
+    <script src="~/Admin/vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
+    <script src="~/Admin/vendors/jquery.hotkeys/jquery.hotkeys.js"></script>
+    <script src="~/Admin/vendors/google-code-prettify/src/prettify.js"></script>
+    <!-- jQuery Tags Input -->
+    <script src="~/Admin/vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
+    <!-- Switchery -->
+    <script src="~/Admin/vendors/switchery/dist/switchery.min.js"></script>
+    <!-- Select2 -->
+    <script src="~/Admin/vendors/select2/dist/js/select2.full.min.js"></script>
+    <!-- Parsley -->
+    <script src="~/Admin/vendors/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Autosize -->
+    <script src="~/Admin/vendors/autosize/dist/autosize.min.js"></script>
+    <!-- jQuery autocomplete -->
+    <script src="~/Admin/vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js"></script>
+    <!-- starrr -->
+    <script src="~/Admin/vendors/starrr/dist/starrr.js"></script>
+}

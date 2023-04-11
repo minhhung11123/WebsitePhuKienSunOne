@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using WebsitePhuKienSunOne.Models;
 namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize("RequireAdminRole")]
     public class AdminCustomersController : Controller
     {
         private readonly dbSunOneContext _context;
@@ -22,7 +24,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
         // GET: Admin/AdminCustomers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Customers.ToListAsync());
+            return View(await _context.Customers.Include(x=>x.Location).ToListAsync());
         }
 
         // GET: Admin/AdminCustomers/Details/5

@@ -45,9 +45,7 @@
                                                 <td>
                                                     <a class="fa fa-search" asp-controller="AdminOrders" asp-action="Details" asp-route-id="@item.OrderId"> Xem</a>
                                                     &nbsp&nbsp&nbsp
-                                                    <a class="fa fa-pencil" asp-controller="AdminOrders" asp-action="Edit" asp-route-id="@item.OrderId"> Sửa</a>
-                                                    &nbsp&nbsp&nbsp
-                                                    <a class="fa fa-remove" asp-controller="AdminOrders" asp-action="Delete" asp-route-id="@item.OrderId"> Xóa</a>
+                                                    <a class="fa fa-pencil" asp-controller="AdminOrders" asp-action="ChangeStatus" asp-route-id="@item.OrderId">Đổi trạng thái</a>
                                                 </td>
                                             </tr>
                                         }

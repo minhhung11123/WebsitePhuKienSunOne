@@ -116,6 +116,7 @@ namespace WebsitePhuKienSunOne.Controllers
                         Email = customer.Email.Trim().ToLower(),
                         Password = (customer.Password + salt.Trim()).ToMD5(),
                         Avatar = "default.jpg",
+                        Birthday = customer.BirthDay,
                         Active = true,
                         Salt = salt,
                         CrateDate = DateTime.Now
@@ -167,7 +168,11 @@ namespace WebsitePhuKienSunOne.Controllers
                     var cs = _context.Customers
                         .AsNoTracking()
                         .SingleOrDefault(x => x.Email.Trim() == customer.Email);
-                    if (cs == null) return RedirectToAction("Register", "Accounts");
+                    if (cs == null)
+                    {
+                        _notifyService.Warning("Sai thông tin đăng nhập");
+                        return View(customer);
+                    }
                     string pass = (customer.Password + cs.Salt.Trim()).ToMD5();
                     if (cs.Password != pass)
                     {

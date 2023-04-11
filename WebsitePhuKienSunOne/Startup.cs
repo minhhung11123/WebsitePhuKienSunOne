@@ -11,9 +11,11 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using System.Threading.Tasks;
+using WebsitePhuKienSunOne.Extension;
 using WebsitePhuKienSunOne.Models;
 
 namespace WebsitePhuKienSunOne
@@ -34,11 +36,23 @@ namespace WebsitePhuKienSunOne
             services.AddDbContext<dbSunOneContext>(options => options.UseSqlServer(stringConnectdb));
             services.AddSession();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                    .AddCookie(options =>
-                        {
-                            options.LoginPath = new PathString("/login.html");
-                            options.AccessDeniedPath = new PathString("/");
-                        });
+                .AddCookie(options =>
+                {
+                    options.LoginPath = new PathString("/login.html");
+                    options.AccessDeniedPath = new PathString("/");
+                });
+            services.AddAuthentication("AdminAuthenticationScheme")
+                .AddCookie("AdminAuthenticationScheme", options =>
+                {
+                    options.LoginPath = "/admin/adminlogin/login";
+                    options.AccessDeniedPath = "/admin/accessdenied";
+                });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdminRole", policy => policy.RequireClaim(ClaimTypes.Role, "admin"));
+            });
+
             services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.All }));
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddNotyf(config => { config.DurationInSeconds = 3; config.IsDismissable = true; config.Position = NotyfPosition.BottomRight; });
@@ -64,8 +78,7 @@ namespace WebsitePhuKienSunOne
 
             app.UseRouting();
             app.UseAuthentication();
-            app.UseAuthorization();
-            
+            app.UseAuthorization(); 
 
             app.UseEndpoints(endpoints =>
             {

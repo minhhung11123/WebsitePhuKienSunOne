@@ -47,7 +47,14 @@
                                                 <td>@item.Email</td>
                                                 <td>@item.Phone</td>
                                                 <td>@item.Role.Description</td>
-                                                <td>@item.LastLogin.Value.ToString("HH:mm dd/MM/yyyy")</td>
+                                                @if(item.LastLogin == null)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.LastLogin.Value.ToString("HH:mm dd/MM/yyyy")</td>
+                                                }
                                                 <td>@if(item.Active)
                                                     {
                                                         <span class="badge badge-primary">Kích hoạt</span>
@@ -58,12 +65,7 @@
                                                     }
                                                 </td>
                                                 <td>
-                                                    <a class="fa fa-search" asp-controller="AdminAccounts" asp-action="Details" asp-route-id="@item.AccountId"> Xem</a>
-                                                    &nbsp&nbsp&nbsp
                                                     <a class="fa fa-pencil" asp-controller="AdminAccounts" asp-action="Edit" asp-route-id="@item.AccountId"> Sửa</a>
-                                                    &nbsp&nbsp&nbsp
-                                                    <a class="fa fa-remove" asp-controller="AdminAccounts" asp-action="Delete" asp-route-id="@item.AccountId"> Xóa</a>
-                                                </td>
                                             </tr>
                                         }
                                     }
