@@ -12,8 +12,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
     {
         public IActionResult Index()
         {
-            var adminId = HttpContext.Session.GetString("AdminId");
-            if (adminId == null)
+            if (HttpContext.Session.GetString("AdminId") == null)
             {
                 return RedirectToAction("Login", "AdminLogin");
             }

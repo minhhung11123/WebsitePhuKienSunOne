@@ -14,7 +14,7 @@ namespace WebsitePhuKienSunOne.Controllers
             _context = context;
         }
         
-        [Route("/page/{Alias}", Name = "PageDetails")]
+        [Route("page-{Alias}", Name = "PageDetails")]
         public IActionResult Details(string Alias)
         {
             if (string.IsNullOrEmpty(Alias)) return RedirectToAction("Index", "Home");

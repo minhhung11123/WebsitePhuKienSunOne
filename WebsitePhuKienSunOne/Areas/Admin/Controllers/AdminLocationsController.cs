@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,39 +18,28 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
     public class AdminLocationsController : Controller
     {
         private readonly dbSunOneContext _context;
+        private INotyfService _notyfService;
 
-        public AdminLocationsController(dbSunOneContext context)
+        public AdminLocationsController(dbSunOneContext context, INotyfService notyfService)
         {
+            _notyfService = notyfService;
             _context = context;
         }
 
         // GET: Admin/AdminLocations
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetString("AdminId") == null)
+            {
+                return RedirectToAction("Login", "AdminLogin");
+            }
             return View(await _context.Locations.ToListAsync());
-        }
-
-        // GET: Admin/AdminLocations/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var location = await _context.Locations
-                .FirstOrDefaultAsync(m => m.LocationId == id);
-            if (location == null)
-            {
-                return NotFound();
-            }
-
-            return View(location);
-        }
+        }        
 
         // GET: Admin/AdminLocations/Create
         public IActionResult Create()
         {
+            
             return View();
         }
 
@@ -62,6 +54,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             {
                 _context.Add(location);
                 await _context.SaveChangesAsync();
+                _notyfService.Success("Thêm mới thành công");
                 return RedirectToAction(nameof(Index));
             }
             return View(location);
@@ -80,6 +73,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+            ViewBag.Select = selectLocation(location.ParentCode, location.Levels);
             return View(location);
         }
 
@@ -99,6 +93,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             {
                 try
                 {
+                    _notyfService.Success("Cập nhật thành công");
                     _context.Update(location);
                     await _context.SaveChangesAsync();
                 }
@@ -118,38 +113,38 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             return View(location);
         }
 
-        // GET: Admin/AdminLocations/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var location = await _context.Locations
-                .FirstOrDefaultAsync(m => m.LocationId == id);
-            if (location == null)
-            {
-                return NotFound();
-            }
-
-            return View(location);
-        }
-
-        // POST: Admin/AdminLocations/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var location = await _context.Locations.FindAsync(id);
-            _context.Locations.Remove(location);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
         private bool LocationExists(int id)
         {
             return _context.Locations.Any(e => e.LocationId == id);
         }
-    }
+
+		public ActionResult ListLocation(int levels)
+		{
+            if (levels == 1)
+            {
+				var lsLocation = _context.Locations
+					.Where(x=>x.Levels == 0)
+					.OrderBy(x => x.Code)
+					.ToList();
+				return Json(lsLocation);
+			}
+			if (levels == 2)
+            {
+				var lsLocation = _context.Locations
+					.Where(x => x.Levels == 1)
+					.OrderBy(x => x.Code)
+					.ToList();
+				return Json(lsLocation);
+			}
+            return Json(null);
+		}
+        
+        public Location selectLocation(int? code, int? levels)
+        {
+            levels--;
+            return _context.Locations
+                .AsNoTracking()
+                .FirstOrDefault(x=>x.Code == code && x.Levels == levels);
+        }
+	}
 }

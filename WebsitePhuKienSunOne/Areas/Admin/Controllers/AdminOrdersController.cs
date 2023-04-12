@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,10 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
         // GET: Admin/AdminOrders
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetString("AdminId") == null)
+            {
+                return RedirectToAction("Login", "AdminLogin");
+            }
             var dbSunOneContext = _context.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.TransactStatus)

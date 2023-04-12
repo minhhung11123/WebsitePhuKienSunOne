@@ -29,6 +29,7 @@
                                         <th>Số điện thoại</th>
                                         <th>Địa chỉ</th>
                                         <th>Tỉnh/Thành</th>
+                                        <th>Kích hoạt</th>
                                         <th>#</th>
                                     </tr>
                                 </thead>
@@ -54,11 +55,21 @@
                                                     <td>@item.Location.Name</td>
                                                 }
                                                 <td>
+                                                    @if (item.Active == true)
+                                                    {
+                                                        <span class="badge badge-primary">Kích hoạt</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-secondary">Khóa</span>
+                                                    }
+                                                </td>
+                                                <td>
                                                     <a class="fa fa-search" asp-controller="AdminCustomers" asp-action="Details" asp-route-id="@item.CustomerId"> Xem</a>
                                                     &nbsp&nbsp&nbsp
-                                                    <a class="fa fa-pencil" asp-controller="AdminCustomers" asp-action="Edit" asp-route-id="@item.CustomerId"> Sửa</a>
+                                                    <a class="fa fa-pencil" asp-controller="AdminCustomers" asp-action="LockCustomer" asp-route-id="@item.CustomerId">Khóa tài khoản</a>
                                                     &nbsp&nbsp&nbsp
-                                                    <a class="fa fa-remove" asp-controller="AdminCustomers" asp-action="Delete" asp-route-id="@item.CustomerId"> Xóa</a>
+                                                    <a class="fa fa-pencil" asp-controller="AdminCustomers" asp-action="NewPassword" asp-route-id="@item.CustomerId">Mật khẩu mới</a>
                                                 </td>
                                             </tr>
                                         }

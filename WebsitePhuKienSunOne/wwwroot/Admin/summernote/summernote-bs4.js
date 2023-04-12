@@ -10023,7 +10023,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
 
-var editor = renderer["a" /* default */].create('<div class="note-editor note-frame card"/>');
+var editor = renderer["a" /* default */].create('<div class="note-editor note-frame card col-md-12"/>');
 var toolbar = renderer["a" /* default */].create('<div class="note-toolbar card-header" role="toolbar"/>');
 var editingArea = renderer["a" /* default */].create('<div class="note-editing-area"/>');
 var codable = renderer["a" /* default */].create('<textarea class="note-codable" aria-multiline="true"/>');

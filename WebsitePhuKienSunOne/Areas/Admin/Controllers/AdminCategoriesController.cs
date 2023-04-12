@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -31,6 +32,10 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
         // GET: Admin/AdminCategories
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetString("AdminId") == null)
+            {
+                return RedirectToAction("Login", "AdminLogin");
+            }
             return View(await _context.Categories.ToListAsync());
         }
 

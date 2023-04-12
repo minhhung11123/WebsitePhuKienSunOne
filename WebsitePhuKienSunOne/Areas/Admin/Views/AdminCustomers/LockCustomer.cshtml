@@ -1,7 +1,7 @@
 ﻿@model WebsitePhuKienSunOne.Models.Customer
 
 @{
-    ViewData["Title"] = "Thông tin khách hàng";
+    ViewData["Title"] = "Quản lý tài khoản khách hàng";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -18,7 +18,7 @@
 
 <div class="page-title">
     <div class="title_left">
-        <h3>Thông tin khách hàng</h3>
+        <h3>Khóa tài khoản</h3>
     </div>
 </div>
 
@@ -96,14 +96,25 @@
                     <input readonly="" type="text" class="form-control" value="@Model.LastLogin.Value.ToShortDateString()">
                 </div>
             </div>
+        </div>
+    </form>
+    <form asp-controller="AdminCustomers" asp-action="LockCustomer">
+        <div class="x_content">
+            <input asp-for="CustomerId" type="hidden" />
             <div class="item form-group">
                 <label class="col-form-label col-md-3 col-sm-3 label-align"></label>
                 <div class="col-md-6 col-sm-6 ">
-                    <input type="checkbox" asp-for="Active" class="js-switch" disabled=""> Kích hoạt
+                    <input type="checkbox" asp-for="Active" class="js-switch"> Kích hoạt
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6 col-sm-6 offset-md-3">
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
                 </div>
             </div>
         </div>
     </form>
+
 </div>
 
 @section Scripts{

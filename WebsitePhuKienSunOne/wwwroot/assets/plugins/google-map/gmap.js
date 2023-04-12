@@ -6,7 +6,7 @@ window.marker = null;
 function initialize() {
     var map;
 
-    var nottingham = new google.maps.LatLng(51.507351, -0.127758);
+    var nottingham = new google.maps.LatLng(10.983950, 106.651938);
 
     var style = [
         {
@@ -103,7 +103,7 @@ function initialize() {
     map.setMapTypeId('grey');
 
     //CREATE A CUSTOM PIN ICON
-    var marker_image ='plugins/google-map/images/marker.png';
+    var marker_image ='images/marker.png';
     var pinIcon = new google.maps.MarkerImage(marker_image,null,null, null,new google.maps.Size(40, 60));
 
     marker = new google.maps.Marker({

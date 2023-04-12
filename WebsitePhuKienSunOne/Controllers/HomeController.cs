@@ -60,12 +60,8 @@ namespace WebsitePhuKienSunOne.Controllers
             return View();
         }
 
+        [Route("contact.html", Name = "Contact")]
         public IActionResult Contact()
-        {
-            return View();
-        }
-
-        public IActionResult About()
         {
             return View();
         }

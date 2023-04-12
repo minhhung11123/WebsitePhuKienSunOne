@@ -1,57 +1,100 @@
 ﻿@model WebsitePhuKienSunOne.Models.Location
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Cập nhật tỉnh thành";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Edit</h1>
-
-<h4>Location</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="LocationId" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Type" class="control-label"></label>
-                <input asp-for="Type" class="form-control" />
-                <span asp-validation-for="Type" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Slug" class="control-label"></label>
-                <input asp-for="Slug" class="form-control" />
-                <span asp-validation-for="Slug" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ParentCode" class="control-label"></label>
-                <input asp-for="ParentCode" class="form-control" />
-                <span asp-validation-for="ParentCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Levels" class="control-label"></label>
-                <input asp-for="Levels" class="form-control" />
-                <span asp-validation-for="Levels" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Code" class="control-label"></label>
-                <input asp-for="Code" class="form-control" />
-                <span asp-validation-for="Code" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<div class="">
+	<div class="page-title">
+		<div class="title_left">
+			<h3>Cập nhật tỉnh thành</h3>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+	<div class="row">
+		<div class="col-md-12 col-sm-12 ">
+			<div class="x_panel">
+				<div class="x_content">
+					<br />
+					<form asp-controller="AdminLocations" asp-action="Edit" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+						<div class="item form-group">
+							<input asp-for="LocationId" type="hidden" />
+							<label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+								Tên địa điểm <span class="required">*</span>
+							</label>
+							<div class="col-md-6 col-sm-6 ">
+								<input asp-for="Name" type="text" id="first-name" required="required" class="form-control ">
+							</div>
+						</div>
+						<div class="item form-group">
+							<label class="col-form-label col-md-3 col-sm-3 label-align" for="last-name">
+								Cấp <span class="required">*</span>
+							</label>
+							<div class="col-md-6 col-sm-6 ">
+								<input asp-for="Levels" type="number" required="required" class="form-control">
+							</div>
+						</div>
+						<div class="item form-group">
+							<label class="col-form-label col-md-3 col-sm-3 label-align" for="last-name">
+								Tên cấp <span class="required">*</span>
+							</label>
+							<div class="col-md-6 col-sm-6 ">
+								<input asp-for="Type" type="tel" id="last-name" required="required" class="form-control">
+							</div>
+						</div>
+						<div class="item form-group">
+							<label class="col-form-label col-md-3 col-sm-3 label-align" for="last-name">
+								Thuộc <span class="required">*</span>
+							</label>
+							<div class="col-md-6 col-sm-6 ">
+								<select class="form-control" asp-for="ParentCode">
+									<option value="@Model.ParentCode" disabled selected>@ViewBag.Select.Name</option>
+								</select>
+							</div>
+						</div>
+						<div class="item form-group">
+							<label class="col-form-label col-md-3 col-sm-3 label-align" for="last-name">
+								Code <span class="required">*</span>
+							</label>
+							<div class="col-md-6 col-sm-6 ">
+								<input asp-for="Code" type="number" class="form-control" />
+							</div>
+						</div>
+						<div class="ln_solid"></div>
+						<div class="item form-group">
+							<div class="col-md-6 col-sm-6 offset-md-3">
+								<button type="submit" class="btn btn-success">Cập nhật</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+@section Scripts{
+	<script>
+		$(document).ready(function () {
+			$(function () {
+				$('#Levels').change(function () {
+					var lv = $(this).val();
+					$.ajax({
+						url: '/Admin/AdminLocations/ListLocation',
+						data: { levels: lv },
+						type: 'GET',
+						dataType: 'json',
+						success: function (lsLocation) {
+							$("#ParentCode").empty();
+							$.each(lsLocation, function (i, item) {
+								var option = '<option value="' + item.code + '">' + item.name + '</option>';
+								$("#ParentCode").append(option);
+							});
+						}
+					});
+				});
+			});
+		});
+	</script>
+}

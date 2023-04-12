@@ -34,7 +34,11 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
 		// GET: Admin/AdminAccounts
 		public async Task<IActionResult> Index()
 		{
-			var id = HttpContext.Session.GetString("AdminId");
+            if (HttpContext.Session.GetString("AdminId") == null)
+            {
+                return RedirectToAction("Login", "AdminLogin");
+            }
+            var id = HttpContext.Session.GetString("AdminId");
 			var acc = _context.Accounts.AsNoTracking().FirstOrDefault(x => x.AccountId == Int32.Parse(id));
 			if (acc.RoleId != 1)
 			{
@@ -154,7 +158,127 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
 			return View(account);
 		}
 
-		private bool AccountExists(int id)
+        // GET: Admin/AdminAccounts/NewPassword/5
+        public async Task<IActionResult> NewPassword(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var account = await _context.Accounts.FindAsync(id);
+            if (account == null)
+            {
+                return NotFound();
+            }
+            ViewData["Role"] = new SelectList(_context.Roles, "RoleId", "Description", account.RoleId);
+            return View(account);
+        }
+
+        // POST: Admin/AdminAccounts/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> NewPassword(int id, [Bind("AccountId,Phone,Email,Password,Salt,Active,FullName,RoleId,LastLogin,CreateDate")] Account account)
+        {
+            if (id != account.AccountId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+					account.Password = (account.Password.Trim() + account.Salt.Trim()).ToMD5();
+                    _context.Update(account);
+                    await _context.SaveChangesAsync();
+                    _notifyService.Success("Cập nhật tài khoản thành công");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AccountExists(account.AccountId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["Role"] = new SelectList(_context.Roles, "RoleId", "Description", account.RoleId);
+            return View(account);
+        }
+
+		[HttpGet]
+        public IActionResult ChangePassword()
+        {
+            var accountId = HttpContext.Session.GetString("AdminId");
+            if (accountId != null)
+            {
+                var cs = _context.Accounts
+					.AsNoTracking()
+					.SingleOrDefault(x => x.AccountId == Convert.ToInt32(accountId));
+                if (cs != null)
+                {
+                    return View();
+                }
+            }
+            return RedirectToAction("Login", "AdminLogin");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ChangePassword(ChangePasswordVM model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var adminId = HttpContext.Session.GetString("AdminId");
+                    if (adminId != null)
+                    {
+                        var account = _context.Accounts
+							.AsNoTracking()
+							.SingleOrDefault(x => x.AccountId == Convert.ToInt32(adminId));
+                        if (account == null)
+                        {
+                            RedirectToAction("Login", "AdminLogin");
+                        }
+                        var pass = (model.OldPassword.Trim() + account.Salt.Trim()).ToMD5();
+                        if (pass == account.Password)
+                        {
+                            string newpass = (model.NewPassword.Trim() + account.Salt.Trim()).ToMD5();
+                            account.Password = newpass;
+                            _context.Update(account);
+                            _context.SaveChanges();
+                            _notifyService.Success("Đổi mật khẩu thành công");
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            _notifyService.Error("Mật khẩu cũ không chính xác");
+                            return RedirectToAction("ChangePassword");
+                        }
+                    }
+                    return RedirectToAction("Login", "AdminLogin");
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch
+            {
+                _notifyService.Error("Đổi mật khẩu không thành công");
+                return RedirectToAction("Profile");
+            }
+        }
+
+        private bool AccountExists(int id)
 		{
 			return _context.Accounts.Any(e => e.AccountId == id);
 		}

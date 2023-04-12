@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebsitePhuKienSunOne.Extension;
 using WebsitePhuKienSunOne.Models;
 
 namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
@@ -24,6 +27,10 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
         // GET: Admin/AdminCustomers
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetString("AdminId") == null)
+            {
+                return RedirectToAction("Login", "AdminLogin");
+            }
             return View(await _context.Customers.Include(x=>x.Location).ToListAsync());
         }
 
@@ -35,7 +42,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers
+            var customer = await _context.Customers.Include(x=>x.WardNavigation).Include(x=>x.DistrictNavigation).Include(x=>x.Location)
                 .FirstOrDefaultAsync(m => m.CustomerId == id);
             if (customer == null)
             {
@@ -45,37 +52,20 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             return View(customer);
         }
 
-        // GET: Admin/AdminCustomers/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Admin/AdminCustomers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomerId,FullName,Birthday,Avatar,Address,Email,Phone,Location,District,Ward,CrateDate,Password,Salt,LastLogin,Active")] Customer customer)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(customer);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(customer);
-        }
-
-        // GET: Admin/AdminCustomers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Admin/AdminCustomers/LockCustomer/5
+        public IActionResult LockCustomer(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = _context.Customers
+                .AsNoTracking()
+                .Include(x => x.WardNavigation)
+                .Include(x => x.DistrictNavigation)
+                .Include(x => x.Location)
+                .FirstOrDefault(x=>x.CustomerId==id);
             if (customer == null)
             {
                 return NotFound();
@@ -83,22 +73,25 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             return View(customer);
         }
 
-        // POST: Admin/AdminCustomers/Edit/5
+        // POST: Admin/AdminCustomers/LockCustomer/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustomerId,FullName,Birthday,Avatar,Address,Email,Phone,Location,District,Ward,CrateDate,Password,Salt,LastLogin,Active")] Customer customer)
+        public async Task<IActionResult> LockCustomer(int id, bool Active)
         {
-            if (id != customer.CustomerId)
+            if (!CustomerExists(id))
             {
                 return NotFound();
             }
-
+            var customer = _context.Customers
+                        .AsNoTracking()
+                        .FirstOrDefault(x => x.CustomerId == id);
             if (ModelState.IsValid)
             {
                 try
-                {
+                {                    
+                    customer.Active = Active;
                     _context.Update(customer);
                     await _context.SaveChangesAsync();
                 }
@@ -118,33 +111,63 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             return View(customer);
         }
 
-        // GET: Admin/AdminCustomers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Admin/AdminCustomers/NewPassword/5
+        public IActionResult NewPassword(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
+            var customer = _context.Customers
+                .AsNoTracking()
+                .Include(x => x.WardNavigation)
+                .Include(x => x.DistrictNavigation)
+                .Include(x => x.Location)
+                .FirstOrDefault(x => x.CustomerId == id);
             if (customer == null)
             {
                 return NotFound();
             }
-
             return View(customer);
         }
 
-        // POST: Admin/AdminCustomers/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Admin/AdminCustomers/NewPassword/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> NewPassword(int id, string password)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (!CustomerExists(id))
+            {
+                return NotFound();
+            }
+            var customer = _context.Customers
+                        .AsNoTracking()
+                        .FirstOrDefault(x => x.CustomerId == id);
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    customer.Password = (password.Trim() + customer.Salt.Trim()).ToMD5();
+                    _context.Update(customer);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!CustomerExists(customer.CustomerId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(customer);
         }
 
         private bool CustomerExists(int id)

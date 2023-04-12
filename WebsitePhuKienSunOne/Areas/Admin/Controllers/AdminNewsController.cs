@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,10 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
         // GET: Admin/AdminNews
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetString("AdminId") == null)
+            {
+                return RedirectToAction("Login", "AdminLogin");
+            }
             return View(await _context.News.ToListAsync());
         }
 
@@ -75,7 +80,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
                 }
                 if (string.IsNullOrEmpty(news.Thumb)) news.Thumb = "default.jpg";
                 news.Alias = Utilities.SEOUrl(news.Title);
-                news.Author = "Admin";
+                news.Author = HttpContext.Session.GetString("AdminName");
                 news.Views = 0;
                 news.CreateDate = DateTime.Now;
                 _context.Add(news);

@@ -1,10 +1,25 @@
 ﻿
 @{
-    ViewData["Title"] = "Contact";
+    ViewData["Title"] = "Liên hệ";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<section class="page-wrapper">
+<section class="page-header">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="content">
+					<h1 class="page-name">Liên hệ</h1>
+					<ol class="breadcrumb">
+						<li><a href="/">Trang chủ</a></li>
+						<li class="active">Liên hệ</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="page-wrapper" onload="initMap()">
 	<div class="contact-section">
 		<div class="container">
 			<div class="row">
@@ -13,19 +28,19 @@
 					<form id="contact-form" method="post" action="" role="form">
 					
 						<div class="form-group">
-							<input type="text" placeholder="Your Name" class="form-control" name="name" id="name">
+							<input type="text" placeholder="Họ Tên" class="form-control" name="name" id="name">
 						</div>
 						
 						<div class="form-group">
-							<input type="email" placeholder="Your Email" class="form-control" name="email" id="email">
+							<input type="email" placeholder="Email" class="form-control" name="email" id="email">
 						</div>
 						
 						<div class="form-group">
-							<input type="text" placeholder="Subject" class="form-control" name="subject" id="subject">
+							<input type="text" placeholder="Chủ Đề" class="form-control" name="subject" id="subject">
 						</div>
 						
 						<div class="form-group">
-							<textarea rows="6" placeholder="Message" class="form-control" name="message" id="message"></textarea>	
+							<textarea rows="6" placeholder="Tin Nhắn" class="form-control" name="message" id="message"></textarea>	
 						</div>
 						
 						<div id="mail-success" class="success">
@@ -37,7 +52,7 @@
 						</div>
 						
 						<div id="cf-submit">
-							<input type="submit" id="contact-submit" class="btn btn-transparent" value="Submit">
+							<input type="submit" id="contact-submit" class="btn btn-transparent" value="Gửi">
 						</div>						
 						
 					</form>
@@ -52,29 +67,25 @@
 					<ul class="contact-short-info" >
 						<li>
 							<i class="tf-ion-ios-home"></i>
-							<span>Khaja Road, Bayzid, Chittagong, Bangladesh</span>
+							<span>382 Cách Mạng Tháng 8, Phú Cường, Thủ Dầu Một, Bình Dương, Việt Nam</span>
 						</li>
 						<li>
 							<i class="tf-ion-android-phone-portrait"></i>
-							<span>Phone: +880-31-000-000</span>
-						</li>
-						<li>
-							<i class="tf-ion-android-globe"></i>
-							<span>Fax: +880-31-000-000</span>
+							<span>Điện thoại: 032-945-0491</span>
 						</li>
 						<li>
 							<i class="tf-ion-android-mail"></i>
-							<span>Email: hello@example.com</span>
+							<span>Email: support@sunone.com</span>
 						</li>
 					</ul>
 					<!-- Footer Social Links -->
 					<div class="social-icon">
 						<ul>
-							<li><a class="fb-icon" href="https://www.facebook.com/themefisher"><i class="tf-ion-social-facebook"></i></a></li>
-							<li><a href="https://www.twitter.com/themefisher"><i class="tf-ion-social-twitter"></i></a></li>
-							<li><a href="https://themefisher.com/"><i class="tf-ion-social-dribbble-outline"></i></a></li>
-							<li><a href="https://themefisher.com/"><i class="tf-ion-social-googleplus-outline"></i></a></li>
-							<li><a href="https://themefisher.com/"><i class="tf-ion-social-pinterest-outline"></i></a></li>
+							<li><a class="fb-icon" href="#"><i class="tf-ion-social-facebook"></i></a></li>
+							<li><a href="#"><i class="tf-ion-social-twitter"></i></a></li>
+							<li><a href="#"><i class="tf-ion-social-dribbble-outline"></i></a></li>
+							<li><a href="#"><i class="tf-ion-social-googleplus-outline"></i></a></li>
+							<li><a href="#"><i class="tf-ion-social-pinterest-outline"></i></a></li>
 						</ul>
 					</div>
 					<!--/. End Footer Social Links -->
@@ -87,3 +98,7 @@
 		</div> <!-- end container -->
 	</div>
 </section>
+@section Scripts{
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDy_-NiKOISQHz-pNBVqaNtPrsfzGqkQis"></script>
+	<script type="text/javascript" src="~/assets/plugins/google-map/gmap.js"></script>
+}
