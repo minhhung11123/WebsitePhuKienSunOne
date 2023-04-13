@@ -46,7 +46,7 @@ namespace WebsitePhuKienSunOne.Controllers
                 .Where(x => x.Active == true && x.HomeFlag == true)
                 .OrderByDescending(x => x.DateCreated)
                 .ToList();
-
+            
             var lsCat = _context.Categories
                 .AsNoTracking()
                 .Where(x => x.Published == true)

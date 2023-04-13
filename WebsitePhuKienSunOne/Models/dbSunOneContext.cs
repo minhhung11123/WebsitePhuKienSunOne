@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using WebsitePhuKienSunOne.ModelViews;
 
 #nullable disable
 
@@ -31,10 +32,10 @@ namespace WebsitePhuKienSunOne.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
+            if (optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=MINHHUNG\\MINHHUNG;Database=dbSunOne;Integrated Security=true");
+                optionsBuilder.UseSqlServer("Server=tcp:websitephukiensunonedbserver.database.windows.net,1433;Initial Catalog=dbSunOne;Persist Security Info=False;User ID=adminsunone;Password=Minhhung11;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
 
@@ -69,13 +70,13 @@ namespace WebsitePhuKienSunOne.Models
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.RoleId)
-                    .HasConstraintName("FK__Accounts__RoleID__440B1D61");
+                    .HasConstraintName("FK__Accounts__RoleID__72C60C4A");
             });
 
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.HasKey(e => e.CatId)
-                    .HasName("PK__Categori__6A1C8ADABA52F3A5");
+                    .HasName("PK__Categori__6A1C8ADAAF848760");
 
                 entity.Property(e => e.CatId).HasColumnName("CatID");
 
@@ -128,20 +129,26 @@ namespace WebsitePhuKienSunOne.Models
                     .HasMaxLength(6)
                     .IsFixedLength(true);
 
+                entity.Property(e => e.Token)
+                    .HasMaxLength(36)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.TokenTimeOut).HasColumnType("datetime");
+
                 entity.HasOne(d => d.DistrictNavigation)
                     .WithMany(p => p.CustomerDistrictNavigations)
                     .HasForeignKey(d => d.District)
-                    .HasConstraintName("FK__Customers__Distr__5441852A");
+                    .HasConstraintName("FK__Customers__Distr__74AE54BC");
 
                 entity.HasOne(d => d.Location)
                     .WithMany(p => p.CustomerLocations)
                     .HasForeignKey(d => d.LocationId)
-                    .HasConstraintName("FK__Customers__Locat__534D60F1");
+                    .HasConstraintName("FK__Customers__Locat__75A278F5");
 
                 entity.HasOne(d => d.WardNavigation)
                     .WithMany(p => p.CustomerWardNavigations)
                     .HasForeignKey(d => d.Ward)
-                    .HasConstraintName("FK__Customers__Ward__5535A963");
+                    .HasConstraintName("FK__Customers__Ward__73BA3083");
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -158,7 +165,7 @@ namespace WebsitePhuKienSunOne.Models
             modelBuilder.Entity<News>(entity =>
             {
                 entity.HasKey(e => e.PostId)
-                    .HasName("PK__News__AA126038C383EF6C");
+                    .HasName("PK__News__AA126038A9E874DD");
 
                 entity.Property(e => e.PostId).HasColumnName("PostID");
 
@@ -208,27 +215,27 @@ namespace WebsitePhuKienSunOne.Models
                 entity.HasOne(d => d.CityNavigation)
                     .WithMany(p => p.OrderCityNavigations)
                     .HasForeignKey(d => d.City)
-                    .HasConstraintName("FK__Orders__City__5629CD9C");
+                    .HasConstraintName("FK__Orders__City__7A672E12");
 
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK__Orders__Customer__403A8C7D");
+                    .HasConstraintName("FK__Orders__Customer__787EE5A0");
 
                 entity.HasOne(d => d.DistrictNavigation)
                     .WithMany(p => p.OrderDistrictNavigations)
                     .HasForeignKey(d => d.District)
-                    .HasConstraintName("FK__Orders__District__571DF1D5");
+                    .HasConstraintName("FK__Orders__District__7B5B524B");
 
                 entity.HasOne(d => d.TransactStatus)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.TransactStatusId)
-                    .HasConstraintName("FK__Orders__Transact__3F466844");
+                    .HasConstraintName("FK__Orders__Transact__7C4F7684");
 
                 entity.HasOne(d => d.WardNavigation)
                     .WithMany(p => p.OrderWardNavigations)
                     .HasForeignKey(d => d.Ward)
-                    .HasConstraintName("FK__Orders__Ward__5812160E");
+                    .HasConstraintName("FK__Orders__Ward__797309D9");
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
@@ -244,12 +251,12 @@ namespace WebsitePhuKienSunOne.Models
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK__OrderDeta__Order__3E52440B");
+                    .HasConstraintName("FK__OrderDeta__Order__778AC167");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK__OrderDeta__Produ__59063A47");
+                    .HasConstraintName("FK__OrderDeta__Produ__76969D2E");
             });
 
             modelBuilder.Entity<Page>(entity =>
@@ -302,7 +309,7 @@ namespace WebsitePhuKienSunOne.Models
                 entity.HasOne(d => d.Cat)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.CatId)
-                    .HasConstraintName("FK__Products__CatID__412EB0B6");
+                    .HasConstraintName("FK__Products__CatID__7D439ABD");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -333,5 +340,7 @@ namespace WebsitePhuKienSunOne.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public DbSet<WebsitePhuKienSunOne.ModelViews.ForgotPasswordVM> ForgotPasswordVM { get; set; }
     }
 }

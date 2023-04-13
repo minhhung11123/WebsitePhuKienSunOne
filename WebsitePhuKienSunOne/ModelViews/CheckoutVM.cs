@@ -12,9 +12,12 @@ namespace WebsitePhuKienSunOne.ModelViews
         [Required(ErrorMessage = "Nhập địa chỉ nhận hàng")]
         public string Address { get; set; }
         [Range(1,int.MaxValue,ErrorMessage = "Vui lòng chọn Tỉnh/Thành")]
+        [Required(ErrorMessage = "Vui lòng chọn Tỉnh/Thành")]
         public int City { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Vui lòng chọn Quận/Huyện")]
+        [Required(ErrorMessage = "Vui lòng chọn Tỉnh/Thành")]
         public int District { get; set; }
+        [Required(ErrorMessage = "Vui lòng chọn Tỉnh/Thành")]
         [Range(1, int.MaxValue, ErrorMessage = "Vui lòng chọn Phường/Xã")]
         public int Ward { get; set; }
         public int PaymentID { get; set; }

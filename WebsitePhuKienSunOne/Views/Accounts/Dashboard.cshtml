@@ -28,7 +28,7 @@
         <div class="row">
             <div class="col-md-12">
                 <ul class="list-inline dashboard-menu text-center">
-                    <li><a href="Dashboard.html">Danh sách đơn hàng</a></li>
+                    <li><a class ="active" href="Dashboard.html">Danh sách đơn hàng</a></li>
                     <li><a href="Profile.html">Thông tin tài khoản</a></li>
                 </ul>
                 <div class="dashboard-wrapper user-dashboard">
@@ -54,8 +54,8 @@
                                             <td>@item.OrderDate.Value.ToShortDateString()</td>
                                             <td>@item.ShipDate</td>
                                             <td><span class="@item.TransactStatus.Class">@item.TransactStatus.Status</span></td>
-                                            <td>@item.TotalMoney.ToString("#,##0") VND</td>
-                                            <td><a href="/viewdetail-@item.OrderId" class="btn btn-default">View</a></td>
+                                            <td>@item.TotalMoney.ToString("#,##0") VNĐ</td>
+                                            <td><a href="/viewdetail-@item.OrderId" class="btn btn-default">Xem</a></td>
                                         </tr>
                                     }
                                 </tbody>

@@ -53,7 +53,7 @@ namespace WebsitePhuKienSunOne.Controllers
                 model.Phone = cs.Phone;
                 model.Address = cs.Address;
             }
-            ViewData["lsCity"] = new SelectList(_context.Locations.Where(x => x.Levels == 0).OrderBy(x => x.Code).ToList(), "LocationId", "Name");
+            ViewBag.lsCity = new SelectList(_context.Locations.Where(x => x.Levels == 0).OrderBy(x => x.Code).ToList(), "LocationId", "Name");
             ViewBag.Cart = cart;
             return View(model);
         }
@@ -120,14 +120,14 @@ namespace WebsitePhuKienSunOne.Controllers
                 }
                 catch
                 {
-                    ViewData["lsCity"] = new SelectList(_context.Locations.Where(x => x.Levels == 0).OrderBy(x => x.Code).ToList(), "LocationID", "Name");
+                    ViewBag.lsCity = new SelectList(_context.Locations.Where(x => x.Levels == 0).OrderBy(x => x.Code).ToList(), "LocationId", "Name");
                     ViewBag.Cart = cart;
                     return View(checkout);
                 }
             }
-            ViewData["lsCity"] = new SelectList(_context.Locations.Where(x => x.Levels == 0).OrderBy(x => x.Code).ToList(), "LocationID", "Name");
+            ViewBag.lsCity = new SelectList(_context.Locations.Where(x => x.Levels == 0).OrderBy(x => x.Code).ToList(), "LocationId", "Name");
             ViewBag.Cart = cart;
-            return View();
+            return View(checkout);
         }
 
         [Route("confirmation.html", Name = "Confirmation")]

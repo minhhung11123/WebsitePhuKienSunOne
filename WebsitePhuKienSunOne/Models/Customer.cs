@@ -27,6 +27,8 @@ namespace WebsitePhuKienSunOne.Models
         public string Salt { get; set; }
         public DateTime? LastLogin { get; set; }
         public bool Active { get; set; }
+        public string Token { get; set; }
+        public DateTime? TokenTimeOut { get; set; }
 
         public virtual Location DistrictNavigation { get; set; }
         public virtual Location Location { get; set; }

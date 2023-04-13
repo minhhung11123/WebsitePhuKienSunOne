@@ -2,16 +2,18 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Configuration;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
+using System.Net.Mail;
+using System.Net;
 using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using WebsitePhuKienSunOne.Extension;
 using WebsitePhuKienSunOne.Helpper;
@@ -305,6 +307,102 @@ namespace WebsitePhuKienSunOne.Controllers
                 _notifyService.Error("Đổi mật khẩu không thành công");
                 return RedirectToAction("Profile");
             }
+        }
+
+        [HttpGet]
+        [Route("ForgetPassword.html", Name = "ForgetPassword")]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("ForgetPassword.html", Name = "ForgetPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = _context.Customers.AsNoTracking().FirstOrDefault(c => c.Email == model.Email);
+
+                if (user != null)
+                {
+                    // Generate password reset token
+                    var token = Guid.NewGuid().ToString();
+                    user.Token = token;
+                    user.TokenTimeOut = DateTime.Now.AddMinutes(10);
+                    _context.Update(user);
+                    _context.SaveChanges();
+
+                    // Send password reset email
+                    var callbackUrl = Url.Action("ResetPassword", "Accounts", new { userId = user.CustomerId, token = token }, protocol: HttpContext.Request.Scheme);
+
+                    var smtpClient = new SmtpClient("smtp.gmail.com", 587)
+                    {
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential("minhhung111234@gmail.com", "hdzaihissvlzthcj"),
+                        EnableSsl = true,
+                    };
+
+                    var message = new MailMessage("minhhung111234@gmail.com", user.Email, "Lấy lại mật khẩu", $"Để lấy lại mật khẩu vui lòng nhấn vào đây: {callbackUrl}");
+                    await smtpClient.SendMailAsync(message);
+
+                    return RedirectToAction("ForgotPasswordConfirmation", "Accounts");
+                }
+
+                // To indicate email not found, always show success page.
+                return RedirectToAction("ForgotPasswordConfirmation", "Accounts");
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("ForgotPasswordConfirmation.html", Name = "ForgotPasswordConfirmation")]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("ResetPassword", Name = "ResetPassword")]
+        public IActionResult ResetPassword(string token, string userId)
+        {
+            ResetPasswordVM model = new ResetPasswordVM { Token = token, CustomerID = Int32.Parse(userId) };
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("ResetPassword", Name = "ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = _context.Customers.AsNoTracking().FirstOrDefault(c => c.CustomerId == model.CustomerID);
+
+                if (user != null)
+                {
+                    if (user.Token == model.Token || user.TokenTimeOut > DateTime.Now)
+                    {
+                        user.Password = (model.Password.Trim() + user.Salt.Trim()).ToMD5();
+                        _context.Update(user);
+                        await _context.SaveChangesAsync();
+                        _notifyService.Success("Mật khẩu đã được thay đổi");
+                        return RedirectToAction("Login", "Accounts");
+                    }
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+            return View(model);
         }
     }
 }
