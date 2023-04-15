@@ -57,6 +57,9 @@
                                 <br>
                                 <b>Ghi Chú: </b> @Model.Note
                             </div>
+                            <div class="col-sm-4 invoice-col">
+                                <b>ID Thanh Toán:</b> @Model.PaymentId
+                            </div>
                             <!-- /.col -->
                         </div>
                         <!-- /.row -->
@@ -75,11 +78,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            @if (od != null && od.Count > 0)
+                                        @if (od != null && od.Count > 0)
+                                        {
+                                            foreach (var item in od)
                                             {
-                                                foreach (var item in od)
-                                                {
+                                                <tr>
                                                     <td>#@item.OrderDetailId</td>
                                                     <td>@item.Product.ProductName</td>
                                                     <td>@item.Quantity</td>
@@ -93,9 +96,9 @@
                                                         <td></td>
                                                     }
                                                     <td>@item.Total.Value.ToString("#,##0") VNĐ</td>
-                                                }
+                                                </tr>
                                             }
-                                        </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>

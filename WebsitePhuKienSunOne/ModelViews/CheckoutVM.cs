@@ -22,5 +22,6 @@ namespace WebsitePhuKienSunOne.ModelViews
         public int Ward { get; set; }
         public int PaymentID { get; set; }
         public string Note { get; set; }
+        public int PaymentMethod { get; set; }
     }
 }

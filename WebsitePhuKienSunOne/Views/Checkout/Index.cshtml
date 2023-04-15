@@ -67,7 +67,13 @@
                         </div>
                         <div class="block">
                             <h4 class="widget-title">Phương thức thanh toán</h4>
-                            <p>Thanh toán khi nhận hàng (COD)</p>
+                            <div class="form-group">
+                                <select asp-for="PaymentMethod" class="form-control" style="height:50px">
+                                    <option value="" disabled selected>Chọn phương thức thanh toán</option>
+                                    <option value="1">Thanh toán khi nhận hàng (COD)</option>
+                                    <option value="2">Thanh toán bằng PayPal</option>
+                                </select>
+                            </div>
                             <div class="checkout-product-details">
                                 <div class="payment">
                                     <div class="card-details">

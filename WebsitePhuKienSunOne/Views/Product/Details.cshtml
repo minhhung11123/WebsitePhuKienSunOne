@@ -73,7 +73,7 @@
                     </div>
                     <div>
                         <a id="add-to-cart" class="btn btn-main mt-20">Thêm vào giỏ hàng</a>
-                        <input type="hidden" asp-for="ProductId"/>
+                        <input type="hidden" asp-for="ProductId" />
                     </div>
                 </div>
             </div>
@@ -185,7 +185,8 @@
                             location.reload();
                         },
                         error: function (error) {
-                            alert("There was an error posting the data to the server: " + error.responseText); 
+                            alert("There was an error posting the data to the server: " + error.responseText);
+                        }
                     });
                 });
             });

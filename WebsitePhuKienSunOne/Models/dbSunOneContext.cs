@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using WebsitePhuKienSunOne.ModelViews;
 
 #nullable disable
 
@@ -206,7 +205,10 @@ namespace WebsitePhuKienSunOne.Models
 
                 entity.Property(e => e.PaymentDate).HasColumnType("datetime");
 
-                entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
+                entity.Property(e => e.PaymentId)
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasColumnName("PaymentID");
 
                 entity.Property(e => e.ShipDate).HasColumnType("datetime");
 
@@ -340,7 +342,5 @@ namespace WebsitePhuKienSunOne.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-        public DbSet<WebsitePhuKienSunOne.ModelViews.ForgotPasswordVM> ForgotPasswordVM { get; set; }
     }
 }

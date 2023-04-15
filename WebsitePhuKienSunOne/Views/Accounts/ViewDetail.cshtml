@@ -68,6 +68,17 @@
                                         <td><strong>Tổng tiền:</strong></td>
                                         <td>@Model.TotalMoney.ToString("#,##0") VNĐ</td>
                                     </tr>
+                                    <tr>
+                                        <td><strong>Thanh toán:</strong></td>
+                                        @if (Model.Paid)
+                                        {
+                                            <td>Đã thanh toán</td>
+                                        }
+                                        else
+                                        {
+                                            <td>Chưa thanh toán</td>
+                                        }
+                                    </tr>
 
                                     <tr>
                                         <td><strong>Trạng thái:</strong></td>
@@ -93,18 +104,18 @@
                                 </thead>
 
                                 <tbody>
-                                    <tr>
-                                        @if(listOd != null && listOd.Count > 0)
+                                    @if (listOd != null && listOd.Count > 0)
+                                    {
+                                        foreach (var item in listOd)
                                         {
-                                            foreach(var item in listOd)
-                                            {
+                                            <tr>
                                                 <td>@item.Product.ProductName</td>
                                                 <td>@item.Quantity</td>
                                                 <td>@item.Price.Value.ToString("#,##0") VNĐ</td>
                                                 <td>@item.Total.Value.ToString("#,##0") VNĐ</td>
-                                            }
-                                        }
-                                    </tr>                                   
+                                            </tr>
+                                        }   
+                                    }
                                 </tbody>
                             </table>
                         </div>
