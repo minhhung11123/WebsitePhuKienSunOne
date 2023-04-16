@@ -48,6 +48,11 @@ namespace WebsitePhuKienSunOne.Controllers
                     {
                         item.amount++;
                     }
+                    Product product = _context.Products.SingleOrDefault(p => p.ProductId == productID);
+                    if (item.amount > product.UnitslnStock)
+                    {
+                        return Json(new { success = false });
+                    }
                 }
                 else
                 {
@@ -57,6 +62,10 @@ namespace WebsitePhuKienSunOne.Controllers
                         amount = amount.HasValue ? amount.Value : 1,
                         product = product
                     };
+                    if (item.amount > product.UnitslnStock)
+                    {
+                        return Json(new { success = false });
+                    }
                     cart.Add(item);
                 }
                 HttpContext.Session.Set<List<CartItem>>("Cart", cart);
@@ -76,7 +85,7 @@ namespace WebsitePhuKienSunOne.Controllers
             {
                 List<CartItem> cart = Cart;
                 CartItem item = cart.SingleOrDefault(p => p.product.ProductId == productID);
-                if(item != null)
+                if (item != null)
                 {
                     cart.Remove(item);
                 }
@@ -99,9 +108,14 @@ namespace WebsitePhuKienSunOne.Controllers
                 if (cart != null)
                 {
                     CartItem item = cart.SingleOrDefault(p => p.product.ProductId == productID);
-                    if (item!=null && amount.HasValue)
+                    if (item != null && amount.HasValue)
                     {
                         item.amount = amount.Value;
+                    }
+                    Product product = _context.Products.SingleOrDefault(p => p.ProductId == productID);
+                    if (item.amount > product.UnitslnStock)
+                    {
+                        return Json(new { success = false });
                     }
                     HttpContext.Session.Set<List<CartItem>>("Cart", cart);
                 }
@@ -113,7 +127,7 @@ namespace WebsitePhuKienSunOne.Controllers
             }
         }
 
-        [Route("Cart.html", Name ="Cart")]
+        [Route("Cart.html", Name = "Cart")]
         public IActionResult Index()
         {
             return View(Cart);

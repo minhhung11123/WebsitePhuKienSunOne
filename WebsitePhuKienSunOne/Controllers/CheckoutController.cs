@@ -120,6 +120,9 @@ namespace WebsitePhuKienSunOne.Controllers
                     //Create list order detail
                     foreach (var item in cart)
                     {
+                        Product pd = _context.Products.AsNoTracking().SingleOrDefault(p => p.ProductId == item.product.ProductId);
+                        pd.UnitslnStock = pd.UnitslnStock - item.amount;
+                        _context.Update(pd);
                         OrderDetail od = new OrderDetail();
                         od.OrderId = order.OrderId;
                         od.ProductId = item.product.ProductId;
