@@ -31,6 +31,7 @@ namespace WebsitePhuKienSunOne.Models
         public string MetaDesc { get; set; }
         public string MetaKey { get; set; }
         public int? UnitslnStock { get; set; }
+        public int? Sold { get; set; }
 
         public virtual Category Cat { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

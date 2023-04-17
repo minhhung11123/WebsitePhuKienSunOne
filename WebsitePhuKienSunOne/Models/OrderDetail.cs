@@ -14,7 +14,7 @@ namespace WebsitePhuKienSunOne.Models
         public int? Quantity { get; set; }
         public int? Discount { get; set; }
         public int? Total { get; set; }
-        public DateTime? CreateDate { get; set; }
+        public DateTime CreateDate { get; set; }
 
         public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }

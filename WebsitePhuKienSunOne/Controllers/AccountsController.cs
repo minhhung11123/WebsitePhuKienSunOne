@@ -110,29 +110,38 @@ namespace WebsitePhuKienSunOne.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    string salt = Utilities.GetRandomCode();
-                    Customer cs = new Customer
+                    var ac = _context.Customers.FirstOrDefault(c => c.Email == customer.Email.Trim().ToLower());
+                    if (ac == null)
                     {
-                        FullName = customer.FullName,
-                        Phone = customer.Phone.Trim().ToLower(),
-                        Email = customer.Email.Trim().ToLower(),
-                        Password = (customer.Password + salt.Trim()).ToMD5(),
-                        Avatar = "default.jpg",
-                        Birthday = customer.BirthDay,
-                        Active = true,
-                        Salt = salt,
-                        CrateDate = DateTime.Now
-                    };
-                    try
-                    {
-                        _context.Add(cs);
-                        await _context.SaveChangesAsync();
-                        _notifyService.Success("Đăng ký thành công");
-                        return RedirectToAction("Login", "Accounts");
+                        string salt = Utilities.GetRandomCode();
+                        Customer cs = new Customer
+                        {
+                            FullName = customer.FullName,
+                            Phone = customer.Phone.Trim().ToLower(),
+                            Email = customer.Email.Trim().ToLower(),
+                            Password = (customer.Password + salt.Trim()).ToMD5(),
+                            Avatar = "default.jpg",
+                            Birthday = customer.BirthDay,
+                            Active = true,
+                            Salt = salt,
+                            CrateDate = DateTime.Now
+                        };
+                        try
+                        {
+                            _context.Add(cs);
+                            await _context.SaveChangesAsync();
+                            _notifyService.Success("Đăng ký thành công");
+                            return RedirectToAction("Login", "Accounts");
+                        }
+                        catch
+                        {
+                            return RedirectToAction("Register", "Accounts");
+                        }
                     }
-                    catch
+                    else
                     {
-                        return RedirectToAction("Register", "Accounts");
+                        _notifyService.Error("Email đã được đăng ký");
+                        return View(customer);
                     }
                 }
                 else

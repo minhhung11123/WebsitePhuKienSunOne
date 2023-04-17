@@ -3,3 +3,92 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
+<div class="row" style="display: inline-block;">
+    <div class=" top_tiles" style="margin: 10px 0;">
+        <div class="col-md-3 col-sm-3  tile" style="width:478px">
+            <span>Tổng số khách hàng</span>
+            <h2>@ViewBag.TotalCustomer</h2>
+        </div>
+        <div class="col-md-3 col-sm-3  tile" style="width:478px">
+            <span>Tổng số sản phẩm</span>
+            <h2>@ViewBag.TotalProduct</h2>
+        </div>
+        <div class="col-md-3 col-sm-3  tile" style="width:478px">
+            <span>Số lượng sản phẩm đã bán</span>
+            <h2>@ViewBag.TotalSold</h2>
+        </div>
+        <div class="col-md-3 col-sm-3 tile" style="width:478px">
+            <span>Tổng doanh thu</span>
+            <h2>@ViewBag.TotalMoney.ToString("#,##0") VNĐ</h2>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 ">
+        <div class="dashboard_graph x_panel">
+            <div class="x_title">
+                <div class="col-md-6">
+                    <h3>Thống kê<small> số lượng sản phẩm đã bán trong 15 ngày qua</small></h3>
+                </div>
+            </div>
+            <div class="x_content">
+                <div class="demo-container" style="height:250px">
+                    <div id="chart_plot_03" class="demo-placeholder"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        function init_flot_chart() {
+
+            if (typeof ($.plot) === 'undefined') { return; }
+
+            var chart_plot_03_data = @ViewBag.List;
+
+
+            var chart_plot_03_settings = {
+                series: {
+                    curvedLines: {
+                        apply: true,
+                        active: true,
+                        monotonicFit: true
+                    }
+                },
+                colors: ["#26B99A"],
+                grid: {
+                    borderWidth: {
+                        top: 0,
+                        right: 0,
+                        bottom: 1,
+                        left: 1
+                    },
+                    borderColor: {
+                        bottom: "#7F8790",
+                        left: "#7F8790"
+                    }
+                }
+            };
+
+            if ($("#chart_plot_03").length) {
+
+                $.plot($("#chart_plot_03"), [{
+                    label: "Số sản phẩm đã bán",
+                    data: chart_plot_03_data,
+                    lines: {
+                        fillColor: "rgba(150, 202, 89, 0.12)"
+                    },
+                    points: {
+                        fillColor: "#fff"
+                    }
+                }], chart_plot_03_settings);
+
+            };
+
+        }
+        $(document).ready(function(){
+            init_flot_chart();
+        });
+    </script>
+}

@@ -302,6 +302,8 @@ namespace WebsitePhuKienSunOne.Models
 
                 entity.Property(e => e.ShortDesc).HasMaxLength(255);
 
+                entity.Property(e => e.Sold).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.Thumb).HasMaxLength(255);
 
                 entity.Property(e => e.Title).HasMaxLength(255);

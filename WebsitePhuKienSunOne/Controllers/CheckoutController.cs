@@ -122,6 +122,7 @@ namespace WebsitePhuKienSunOne.Controllers
                     {
                         Product pd = _context.Products.AsNoTracking().SingleOrDefault(p => p.ProductId == item.product.ProductId);
                         pd.UnitslnStock = pd.UnitslnStock - item.amount;
+                        pd.Sold = item.amount;
                         _context.Update(pd);
                         OrderDetail od = new OrderDetail();
                         od.OrderId = order.OrderId;
