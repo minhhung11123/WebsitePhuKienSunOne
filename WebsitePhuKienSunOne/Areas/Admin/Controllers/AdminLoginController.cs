@@ -15,7 +15,7 @@ using WebsitePhuKienSunOne.Extension;
 
 namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
 {
-	[Area("Admin")]
+    [Area("Admin")]
     [Authorize("RequireAdminRole")]
     public class AdminLoginController : Controller
 	{
@@ -32,7 +32,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
 		[AllowAnonymous]
 		public IActionResult Login(string returnUrl = null)
 		{
-			var accountId = HttpContext.Session.GetString("AdminId");
+            var accountId = HttpContext.Session.GetString("AdminId");
 			if (accountId != null)
 			{
 				return RedirectToAction("Index", "Home");

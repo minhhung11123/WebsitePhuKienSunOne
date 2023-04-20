@@ -16,9 +16,11 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
     public class HomeController : Controller
     {
         private readonly dbSunOneContext _context;
-        public HomeController(dbSunOneContext context)
+        private INotyfService _notyf;
+        public HomeController(dbSunOneContext context, INotyfService notyf)
         {
             _context = context;
+            _notyf = notyf;
         }
 
         public IActionResult Index()
@@ -27,9 +29,10 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
             {
                 return RedirectToAction("Login", "AdminLogin");
             }
+
             ViewBag.TotalCustomer = _context.Customers.Count();
             ViewBag.TotalProduct = _context.Products.Count();
-            ViewBag.TotalSold = _context.Products.Sum(x => x.Sold);
+            ViewBag.TotalSold = _context.OrderDetails.Sum(x => x.Quantity);
             ViewBag.TotalMoney = _context.Orders.Sum(x => x.TotalMoney);
             int[,] value = new int[15, 2];
             var dailyTotals = _context.OrderDetails
@@ -46,12 +49,15 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
                 value[i - 1, 0] = i;
                 value[i - 1, 1] = 0;
             }
-            foreach(var item in dailyTotals)
+
+            foreach (var item in dailyTotals)
             {
-                var a = (DateTime.Now.Date - item.Date.Date).Days;
+                var a = (DateTime.Now.Date - item.Date.Date).Days + 1;
                 value[a, 1] = item.TotalQuantity.Value;
             }
+
             string str = "[";
+
             for (int i = 0; i < value.GetLength(0); i++)
             {
                 str += "[" + value[i, 0] + "," + value[i, 1] + "]";
@@ -60,6 +66,7 @@ namespace WebsitePhuKienSunOne.Areas.Admin.Controllers
                     str += ",";
                 }
             }
+
             str += "]";
             ViewBag.List = str;
             return View();
