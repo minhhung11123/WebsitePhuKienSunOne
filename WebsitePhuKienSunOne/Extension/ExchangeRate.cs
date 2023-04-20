@@ -15,7 +15,7 @@ namespace WebsitePhuKienSunOne.Extension
                 {
                     if (reader.NodeType == XmlNodeType.Element && reader.Name == "Exrate" && reader.GetAttribute("CurrencyCode") == "USD")
                     {
-                        string strBuyRate = reader.GetAttribute("Buy");
+                        string strBuyRate = reader.GetAttribute("Transfer");
                         string fixBuyRate = strBuyRate.Replace(",", "").Replace(".00", "");
                         decimal buyRate = decimal.Parse(fixBuyRate);
                         return buyRate;
