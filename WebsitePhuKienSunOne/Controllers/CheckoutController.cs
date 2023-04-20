@@ -199,6 +199,8 @@ namespace WebsitePhuKienSunOne.Controllers
                     var executedPayment = ExecutePayment(apiContext, payerId, paymentId as string);
                     if (executedPayment.state.ToLower() != "approved")
                     {
+                        HttpContext.Session.Remove("Cart");
+                        HttpContext.Session.Remove("orderId");
                         return View("PaymentFailed");
                     }
                     var orderId = HttpContext.Session.GetInt32("orderId");
@@ -215,6 +217,8 @@ namespace WebsitePhuKienSunOne.Controllers
             }
             catch
             {
+                HttpContext.Session.Remove("Cart");
+                HttpContext.Session.Remove("orderId");
                 return View("PaymentFailed");
             }
         }
@@ -240,13 +244,16 @@ namespace WebsitePhuKienSunOne.Controllers
             };
 
             var cart = HttpContext.Session.Get<List<CartItem>>("Cart");
+            decimal s = 0;
             foreach (var item in cart)
             {
+                decimal a = Math.Round((decimal)((item.product.Discount > 0 ? item.product.Discount : item.product.Price) / ExchangeRate.GetUSDBuyRate()), 2);
+                s = s + a*item.amount;
                 itemList.items.Add(new Item()
                 {
                     name = item.product.ProductName,
                     currency = "USD",
-                    price = Math.Round((decimal)((item.product.Discount > 0 ? item.product.Discount : item.product.Price) / ExchangeRate.GetUSDBuyRate()), 2).ToString(),
+                    price = a.ToString(),
                     quantity = item.amount.ToString(),
                     sku = "SKU"
                 });
@@ -263,7 +270,7 @@ namespace WebsitePhuKienSunOne.Controllers
             var amount = new Amount()
             {
                 currency = "USD",
-                total = (cart.Sum(x => x.totalMoney) / ExchangeRate.GetUSDBuyRate()).ToString("0.00"),
+                total = s.ToString(),
             };
             var transactionList = new List<Transaction>();
             transactionList.Add(new Transaction()
